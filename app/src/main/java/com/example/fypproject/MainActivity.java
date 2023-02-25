@@ -1,8 +1,10 @@
 package com.example.fypproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Button;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -16,10 +18,23 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fypproject.databinding.ActivityMainBinding;
 
+//TODO: LIST HERE
+//More Complexity?
+//Connect All Activity
+//Move expenses to Report
+//
+
+//TODO: Low-level
+
+//TODO: Other Subject
+//EA-mark, ES-lab + test soon, AI-lab, GE-LAB,
+
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
+
+    private Button inventoryBtn, transactionsBtn, reportsBtn, expensesBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +62,33 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        inventoryBtn = findViewById(R.id.inventory_button);// change name
+        transactionsBtn = findViewById(R.id.transactions_button);// change name
+
+        inventoryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent itemIntent = new Intent(MainActivity.this, InventoryActivity.class);
+                startActivity(itemIntent);
+            }
+        });
+
+        transactionsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent transactionsIntent = new Intent(MainActivity.this, TransactionActivity.class);
+                startActivity(transactionsIntent);
+            }
+        });
+
+//        reportsBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent reportsIntent = new Intent(MainActivity.this, TransactionActivity.class);
+//                startActivity(reportsIntent);
+//            }
+//        });
     }
 
     @Override
