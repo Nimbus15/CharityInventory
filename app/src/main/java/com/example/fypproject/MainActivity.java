@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+        NavigationUI.setupWithNavController(navigationView, navController);//problem
 
         inventoryBtn = findViewById(R.id.inventory_button);// change name
         transactionsBtn = findViewById(R.id.transactions_button);// change name

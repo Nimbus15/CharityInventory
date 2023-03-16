@@ -11,4 +11,8 @@ public class TransactionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction);
     }
+
+    public void generateTransaction(){
+
+    }
 }

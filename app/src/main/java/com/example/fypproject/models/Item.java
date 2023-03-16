@@ -12,12 +12,13 @@ public class Item {
     private String image;
     private String notes;
     private float price;
+    private String approved;
 
     public Item() {
     }
 
-    public Item(int ID, String name, String desc, String category, int quantity, int minQuantity,
-                String brand, String barcode, String image, String notes, float price) {
+    public Item(int ID, String name, String desc, String category,
+                int quantity, int minQuantity, String brand, String barcode, String image, String notes, float price, String approved) {
         this.ID = ID;
         this.name = name;
         this.desc = desc;
@@ -29,6 +30,7 @@ public class Item {
         this.image = image;
         this.notes = notes;
         this.price = price;
+        this.approved = approved;
     }
 
     public int getID() {
@@ -119,6 +121,14 @@ public class Item {
         this.price = price;
     }
 
+    public String getApproved() {
+        return approved;
+    }
+
+    public void setApproved(String approved) {
+        this.approved = approved;
+    }
+
     @Override
     public String toString() {
         return "Item{" +
@@ -130,9 +140,10 @@ public class Item {
                 ", minQuantity=" + minQuantity +
                 ", brand='" + brand + '\'' +
                 ", barcode='" + barcode + '\'' +
-                ", image='" + image + '\'' +
+                ", image=" + image +
                 ", notes='" + notes + '\'' +
                 ", price=" + price +
+                ", approved='" + approved + '\'' +
                 '}';
     }
 }

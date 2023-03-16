@@ -33,4 +33,6 @@ public class InventoryActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }
