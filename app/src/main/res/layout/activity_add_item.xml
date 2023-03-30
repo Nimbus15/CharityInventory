@@ -152,7 +152,7 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/buttonGallery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Gallery"
@@ -164,7 +164,7 @@
         app:layout_constraintVertical_bias="0.279" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/buttonCamera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Camera"
@@ -195,7 +195,7 @@
         android:layout_height="74dp"
         android:ems="10"
         android:hint="Input Price"
-        android:inputType="textPersonName"
+        android:inputType="numberDecimal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.82"
@@ -238,7 +238,7 @@
         android:layout_height="33dp"
         android:ems="10"
         android:hint="Input Quantity"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.012"
@@ -259,7 +259,7 @@
         app:layout_constraintVertical_bias="0.461" />
 
     <Button
-        android:id="@+id/buttonPlusQ"
+        android:id="@+id/buttonPlus"
         android:layout_width="41dp"
         android:layout_height="47dp"
         android:text="+"

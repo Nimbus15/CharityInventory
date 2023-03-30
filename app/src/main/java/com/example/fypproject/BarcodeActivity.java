@@ -1,2 +1,4 @@
-package com.example.fypproject;public class BarcodeActivity {
+package com.example.fypproject;
+
+public class BarcodeActivity {
 }
