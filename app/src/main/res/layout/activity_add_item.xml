@@ -314,7 +314,7 @@
         app:layout_constraintVertical_bias="0.86" />
 
     <Button
-        android:id="@+id/button8"
+        android:id="@+id/buttonBarcode"
         android:layout_width="88dp"
         android:layout_height="36dp"
         android:text="||"
@@ -363,7 +363,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.615" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

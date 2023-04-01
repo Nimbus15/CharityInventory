@@ -1,9 +1,12 @@
 package com.example.fypproject;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -22,15 +25,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.fypproject.models.Item;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.mlkit.vision.barcode.BarcodeScanner;
+import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -39,20 +45,22 @@ import com.google.zxing.common.BitMatrix;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
-import java.util.concurrent.ExecutorService;
 
 
 public class AddItemActivity extends AppCompatActivity {
 
     private DatabaseReference db;
     private EditText editTextName, editTextDescription, editTextQuantity, editTextBrand,
-    editTextCategory, editTextBarcode, editTextPrice, editTextNote, editTextMinQuantity;
+            editTextCategory, editTextBarcode, editTextPrice, editTextNote, editTextMinQuantity;
     private EditText editTextApproval;
     private ImageView imageProfile;
     private Button buttonComplete, buttonCamera, buttonGallery;
     private Button buttonMinus, buttonPlus;
+    private Button buttonBarcode;
 
     private static final int CAMERA_PERMISSION_CODE = 100;//?
     private static final int STORAGE_PERMISSION_CODE = 101;
@@ -62,17 +70,21 @@ public class AddItemActivity extends AppCompatActivity {
 
     //https://programmerworld.co/android/how-to-generate-bar-code-for-any-text-in-your-android-app-android-studio-source-code/#:~:text=%E2%80%93%20Android%20Studio%20Source%20code%20In%20this%20video,bar%20code%20format%20image%20for%20the%20entered%20Text.
 
-    private int randomBRCodeNumber=1000;
+    private int randomBRCodeNumber = 1000;
+
+    private TextView textViewResponse;
+    private ActivityResultLauncher<Intent> barcodeActivityLauncher;
+
     //threads
     //===
-   public void barCodeButton(){
+    public void generateANewBarcode() {
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
             BitMatrix bitMatrix = multiFormatWriter.encode(editTextName.getText().toString(), BarcodeFormat.CODE_128, editTextName.getWidth(), editTextName.getHeight());
             Bitmap bitmap = Bitmap.createBitmap(editTextName.getWidth(), editTextName.getHeight(), Bitmap.Config.RGB_565);
-            for (int i = 0; i<editTextName.getWidth(); i++){
-                for (int j = 0; j<editTextName.getHeight(); j++){
-                    bitmap.setPixel(i,j,bitMatrix.get(i,j)? Color.BLACK:Color.WHITE);
+            for (int i = 0; i < editTextName.getWidth(); i++) {
+                for (int j = 0; j < editTextName.getHeight(); j++) {
+                    bitmap.setPixel(i, j, bitMatrix.get(i, j) ? Color.BLACK : Color.WHITE);
                 }
             }
             imageProfile.setImageBitmap(bitmap);//heretest
@@ -83,7 +95,6 @@ public class AddItemActivity extends AppCompatActivity {
     //===
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,22 +102,45 @@ public class AddItemActivity extends AppCompatActivity {
 
         db = FirebaseDatabase.getInstance().getReference();
 
+        //Add data from db
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("inventory");
+
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange (@NonNull DataSnapshot dataSnapshot){
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                HashMap value = (HashMap) dataSnapshot.getValue();
+                Log.d("TAG", "Value is: " + value);
+                System.out.println("onDataChange called");
+            }
+            @Override
+            public void onCancelled (@NonNull DatabaseError error){
+                // Failed to read value
+                Log.w("TAG", "Failed to read value.", error.toException());
+            }
+        });
+
+        items = new ArrayList<Item>();
+
         editTextName = (EditText) findViewById(R.id.editTextName);
-        editTextDescription= (EditText) findViewById(R.id.editTextDescription);
+        editTextDescription = (EditText) findViewById(R.id.editTextDescription);
         editTextQuantity = (EditText) findViewById(R.id.editTextQuantity);
         editTextBrand = (EditText) findViewById(R.id.editTextBrand);
         editTextCategory = (EditText) findViewById(R.id.editTextCategory);
         editTextBarcode = (EditText) findViewById(R.id.editTextBarcode);
         editTextPrice = (EditText) findViewById(R.id.editTextPrice);
         editTextNote = (EditText) findViewById(R.id.editTextNote1);
-        editTextApproval =  (EditText) findViewById(R.id.editTextApproval);
+        editTextApproval = (EditText) findViewById(R.id.editTextApproval);
         editTextMinQuantity = (EditText) findViewById(R.id.editTextMinQuantity);
         imageProfile = (ImageView) findViewById(R.id.imageProfile);
         imageProfile.setImageResource(R.drawable.image_placeholder);
 
         buttonComplete = findViewById(R.id.buttonComplete);
         initialisation();
-        itemTestInput();
+        testInputs();
         //getInputsFromFields();
         buttonComplete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +148,8 @@ public class AddItemActivity extends AppCompatActivity {
 //                Intent itemIntent = new Intent(AddItemActivity.this, InventoryActivity.class);
 //                startActivity(itemIntent);
                 //here//inputItemDetails();
-                barCodeButton();
+                generateANewBarcode();
+                collateData();
             }
         });
 
@@ -126,22 +161,22 @@ public class AddItemActivity extends AppCompatActivity {
         buttonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE, IMAGE_PICK_CODE );
+                checkPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE, IMAGE_PICK_CODE);
                 checkPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
                 checkPermission(android.Manifest.permission.CAMERA, CAMERA_PERMISSION_CODE);
                 Toast.makeText(AddItemActivity.this, "CAMERA WORKING", Toast.LENGTH_SHORT).show();
 
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if(cameraIntent.resolveActivity(getPackageManager())!=null){
+                if (cameraIntent.resolveActivity(getPackageManager()) != null) {
                     File photoFile = null;
                     try {
                         photoFile = createImageFile();
                     } catch (IOException e) {
-                        Log.e("TAG",e.getMessage());
+                        Log.e("TAG", e.getMessage());
                     }
-                    if(photoFile!=null){
-                        Uri photoUri = FileProvider.getUriForFile(AddItemActivity.this,"com.example.fypproject.fileProvider",photoFile);
-                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,photoUri);
+                    if (photoFile != null) {
+                        Uri photoUri = FileProvider.getUriForFile(AddItemActivity.this, "com.example.fypproject.fileProvider", photoFile);
+                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                         startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
                     }
                 }
@@ -152,7 +187,7 @@ public class AddItemActivity extends AppCompatActivity {
         buttonGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE, IMAGE_PICK_CODE );
+                checkPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE, IMAGE_PICK_CODE);
                 pickImageFromGallery();
             }
         });
@@ -160,7 +195,7 @@ public class AddItemActivity extends AppCompatActivity {
         buttonPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                quantity +=1;
+                quantity += 1;
                 System.out.println("quantity: " + quantity);
             }
         });
@@ -168,8 +203,28 @@ public class AddItemActivity extends AppCompatActivity {
         buttonMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                quantity -=1;
+                quantity -= 1;
                 System.out.println("quantity: " + quantity);
+            }
+        });
+
+        buttonBarcode = findViewById(R.id.buttonBarcode);
+        barcodeActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    String response = result.getData().getStringExtra(BarcodeActivity.EXTRA_SCANNED_RESULT);
+                    //textViewResponse.setText(response);
+                    editTextBarcode.setText(response);
+                }
+            }
+        });
+
+        buttonBarcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AddItemActivity.this, BarcodeActivity.class);
+                barcodeActivityLauncher.launch(intent);
             }
         });
     }
@@ -177,47 +232,48 @@ public class AddItemActivity extends AppCompatActivity {
     int ID;
     String name, description, brand, category,
             barcode, notes, approval;
-    String defaultUri ,newUri;
+    String defaultUri, newUri;
     int quantity, minQuantity;
     float price;
 
-    private void initialisation(){
+    private void initialisation() {
         //initialisation with default - declare here
         ID = 0;
         name = "null";
-        description ="null";
+        description = "null";
         quantity = 0;
-        minQuantity =0;
+        minQuantity = 0;
         brand = "brand";
         category = "null";
-        barcode ="00000";
+        barcode = "00000";
         price = 0.0f;
         notes = "null";
         approval = "null";
-        itemTestInput();
+        testInputs();
 
         imageFile = new File("/storage/self/primary/Pictures/new_image.jpeg");
-        setInputsToFields();
+        setFields();
     }
 
     File imageFile;
-    private void itemTestInput(){
-        ID = 112;
+
+    private void testInputs() {
+        ID = 113;
         name = "testname";
-        description ="testdesc";
+        description = "testdesc";
         quantity += 2;
         minQuantity += 1;
         brand = "testbrand";
         category = "testcategory";
-        barcode ="00000000";
+        barcode = "00000000";
         price = 0.0f;
         notes = "testnotes";
         approval = "no";
         imageFile = new File("/storage/self/primary/Pictures/new_image.jpeg");
-        setInputsToFields();
+        setFields();
     }
 
-    private void setInputsToFields(){
+    private void setFields() {
         editTextName.setText(name);
         editTextDescription.setText(description);
         editTextQuantity.setText(String.valueOf(quantity));
@@ -230,13 +286,14 @@ public class AddItemActivity extends AppCompatActivity {
         editTextNote.setText(notes);
         editTextApproval.setText(approval);
 
-        if(imageFile.exists()){
+        if (imageFile.exists()) {
             Log.d("Image", "Image Working");
             Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
             //here//imageProfile.setImageBitmap(imageBitmap);
         }
     }
-    private void getInputsFromFields(){
+
+    private void getInputs() {
         name = editTextName.getText().toString();
         description = editTextDescription.getText().toString();
         quantity = Integer.parseInt(editTextQuantity.getText().toString());
@@ -250,14 +307,15 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     private String choosenPhotoPath;
-    private void inputItemDetails() {
+
+    private void collateData() {
         //initialisation();
 
-        Item item = new Item(ID, name, description, category, quantity,
-                minQuantity, brand, barcode, defaultUri, notes, price, approval);
-        System.out.println(item.toString());
+//        Item item = new Item(ID, name, description, category, quantity,
+//                minQuantity, brand, barcode, defaultUri, notes, price, approval);
+//        System.out.println(item.toString());
 
-        getInputsFromFields();
+        getInputs();
 
         Item item2 = new Item(ID, name, description, category, quantity,
                 minQuantity, brand, barcode, choosenPhotoPath, notes, price, approval);
@@ -265,13 +323,17 @@ public class AddItemActivity extends AppCompatActivity {
         System.out.println(item2.toString());
 
         //add to database
+        //writeToDatabase(item2);
+    }
+
+    private void writeToDatabase(Item item2) {
         db.child("inventory").child(String.valueOf(ID)).setValue(item2).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     Void snapshot = task.getResult();
                     //Log.d("TAG", "creator: " + creator);
-                    Log.d("TAG","WORKING LETS CHILL");
+                    Log.d("TAG", "WORKING LETS CHILL");
                 } else {
                     Log.d("TAG", task.getException().getMessage()); //Don't ignore potential errors!
                 }
@@ -279,17 +341,43 @@ public class AddItemActivity extends AppCompatActivity {
         });
     }
 
-    private String currentPhotoPath;
-    private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String imageFileName = "JPEG_"+timeStamp+"_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName,".jpg",storageDir);
-        currentPhotoPath = image.getAbsolutePath();
-        return  image;
+
+    private ArrayList<Item> items;
+
+    private void getDataFromDatabase() {
+        int _ID = 112;
+        String _name = "testname";
+        String _description = "testdesc";
+        int _quantity = 2;
+        int _minQuantity = 1;
+        String _brand = "testbrand";
+        String _category = "testcategory";
+        String _barcode = "00000000";
+        float _price = 0.0f;
+        String _notes = "testnotes";
+        String _approval = "no";
+        //File _imageFile = new File("/storage/self/primary/Pictures/new_image.jpeg");
+        String _imageString = "/storage/self/primary/Pictures/new_image.jpeg";
+
+        //Item item2 = new Item(ID, name, description, category, quantity,
+        // minQuantity, brand, barcode, choosenPhotoPath, notes, price, approval);
+
+        Item newItem = new Item(_ID, _name, _description, _category, _quantity,
+                _minQuantity, _brand, _barcode, _imageString, _notes, _price, _approval);
     }
 
-    private void pickImageFromGallery(){
+    private String currentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void pickImageFromGallery() {
         //Intent to pick image
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
@@ -301,8 +389,8 @@ public class AddItemActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         /*  Log.d("TAG",currentPhotoPath);*/
-        if(requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK && data !=null){
-            Log.d("TAGCameraphoto",currentPhotoPath);
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            Log.d("TAGCameraphoto", currentPhotoPath);
 
             Glide
                     .with(AddItemActivity.this)
@@ -311,9 +399,8 @@ public class AddItemActivity extends AppCompatActivity {
                     .placeholder(R.drawable.ic_launcher_foreground)//
                     .into(imageProfile);
             choosenPhotoPath = currentPhotoPath;//
-        }
-        else if(requestCode == IMAGE_PICK_CODE && resultCode == RESULT_OK && data !=null){
-            Log.d("TAGGalleryphoto",String.valueOf(data.getData()));
+        } else if (requestCode == IMAGE_PICK_CODE && resultCode == RESULT_OK && data != null) {
+            Log.d("TAGGalleryphoto", String.valueOf(data.getData()));
             Glide
                     .with(AddItemActivity.this)
                     .load(data.getData())
@@ -325,14 +412,12 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     // Function to check and request permission.
-    public void checkPermission(String permission, int requestCode)
-    {
+    public void checkPermission(String permission, int requestCode) {
         if (ContextCompat.checkSelfPermission(AddItemActivity.this, permission) == PackageManager.PERMISSION_DENIED) {
 
             // Requesting the permission
-            ActivityCompat.requestPermissions(AddItemActivity.this, new String[] { permission }, requestCode);
-        }
-        else {
+            ActivityCompat.requestPermissions(AddItemActivity.this, new String[]{permission}, requestCode);
+        } else {
             Toast.makeText(AddItemActivity.this, "Permission already granted", Toast.LENGTH_SHORT).show();
         }
     }
@@ -340,8 +425,7 @@ public class AddItemActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
-                                           @NonNull int[] grantResults)
-    {
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == CAMERA_PERMISSION_CODE) {
@@ -350,35 +434,23 @@ public class AddItemActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Showing the toast message
                 Toast.makeText(AddItemActivity.this, "Camera Permission Granted", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
                 Toast.makeText(AddItemActivity.this, "Camera Permission Denied", Toast.LENGTH_SHORT).show();
             }
-        }
-        else if (requestCode == STORAGE_PERMISSION_CODE) {
+        } else if (requestCode == STORAGE_PERMISSION_CODE) {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(AddItemActivity.this, "Storage Permission Granted", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
                 Toast.makeText(AddItemActivity.this, "Storage Permission Denied", Toast.LENGTH_SHORT).show();
             }
-        }
-        else if (requestCode == IMAGE_PICK_CODE) {
+        } else if (requestCode == IMAGE_PICK_CODE) {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(AddItemActivity.this, "Gallery Permission Granted", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
                 Toast.makeText(AddItemActivity.this, "Gallery Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
-
-    public static final String EXTRA_SCANNED_RESULT = "Extra_scanned_result";
-    private PreviewView previewView;
-    private BarcodeScanner scanner;
-
-    private static final int PERMISSION_CAMERA_CODE = 1;
-    private ExecutorService cameraExecutor;
 }
