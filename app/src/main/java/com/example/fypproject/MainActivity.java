@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         inventoryBtn = findViewById(R.id.inventory_button);// change name
         transactionsBtn = findViewById(R.id.transactions_button);// change name
 
+//        startActivityForResult(AddItemActivity);
+//        AddItemActivity.checkAllPermissions();
         inventoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
