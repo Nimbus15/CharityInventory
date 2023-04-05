@@ -102,13 +102,18 @@ public class AddItemActivity extends AppCompatActivity {
     }
     //===
     private ArrayList<Item> retrievedItems;
+    private Item retrievedItem;
+    String idTemp;
+    Item itemCaptured;
     private void readData(){
 
         //offline
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child("inventory");//
-        List<String> inventoryIdList = new ArrayList();
-        final Boolean[] needKey = {true};
+        ArrayList<String> inventoryIdList = new ArrayList();
+
+        retrievedItems = new ArrayList<Item>();
+
         myRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -116,14 +121,18 @@ public class AddItemActivity extends AppCompatActivity {
                     if(task.getResult().exists()){
                         Toast.makeText(AddItemActivity.this, "Successfully Read", Toast.LENGTH_SHORT).show();
                         DataSnapshot dataSnapshot = task.getResult();
-                        if(needKey[0]){
-                            for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                                inventoryIdList.add(postSnapshot.getKey());
-                            }
-                            needKey[0] = false;
+                        Log.d("TAGdataSnapshot", "onComplete: dataSnapshot " + dataSnapshot.getValue());
+
+                        for(DataSnapshot itemSnapshot: dataSnapshot.getChildren()){
+                            idTemp = String.valueOf(itemSnapshot.getKey());
+                             Log.d("TAG idTemp", String.valueOf(idTemp));
+                            itemCaptured = itemSnapshot.getValue(Item.class);
+                            Log.d("TAG itemCaptured", String.valueOf(itemCaptured));
+                            retrievedItems.add(itemCaptured);
                         }
-                        String idTemp = String.valueOf(dataSnapshot.child(String.valueOf(inventoryIdList.get(0))).getKey());
-                        Log.d("TAG idTemp", "onComplete: idTemp: " + idTemp);
+                        for(Item r : retrievedItems){
+                            Log.d("TAG retrievedItems Now", r.toString());
+                        }
                     }else{
                         Toast.makeText(AddItemActivity.this, "Item Doesn't Exist", Toast.LENGTH_SHORT).show();
                     }
@@ -131,7 +140,6 @@ public class AddItemActivity extends AppCompatActivity {
                     Toast.makeText(AddItemActivity.this, "Failed To Read", Toast.LENGTH_SHORT).show();
                 }
             }
-            
         });
     }
 
