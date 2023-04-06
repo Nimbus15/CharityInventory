@@ -58,24 +58,6 @@ public class AddItemActivity extends AppCompatActivity {
     private Button buttonMinus, buttonPlus;
     private Button buttonBarcode;
 
-    /*
-        private static final int CAMERA_PERMISSION_CODE = 100;//?
-    private static final int STORAGE_PERMISSION_CODE = 101;
-
-    private static final int INTERNET_CODE = 102;
-
-    private static final int NETWORK_CODE = 103;
-
-    private static final int IMAGE_PICK_CODE = 1000;
-    private static final int CAMERA_REQUEST_CODE = 2000;
-
-
-
-
-     */
-
-    //https://programmerworld.co/android/how-to-generate-bar-code-for-any-text-in-your-android-app-android-studio-source-code/#:~:text=%E2%80%93%20Android%20Studio%20Source%20code%20In%20this%20video,bar%20code%20format%20image%20for%20the%20entered%20Text.
-
     private int randomBRCodeNumber = 1000;
 
     private TextView textViewResponse;
@@ -83,6 +65,7 @@ public class AddItemActivity extends AppCompatActivity {
 
     //threads
     //===
+    //https://programmerworld.co/android/how-to-generate-bar-code-for-any-text-in-your-android-app-android-studio-source-code/#:~:text=%E2%80%93%20Android%20Studio%20Source%20code%20In%20this%20video,bar%20code%20format%20image%20for%20the%20entered%20Text.
     public void generateANewBarcode() {
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
@@ -98,48 +81,6 @@ public class AddItemActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    //===
-    private ArrayList<Item> retrievedItems;
-    private Item retrievedItem;
-    String idTemp;
-    Item itemCaptured;
-//    private void readData(){
-//
-//        //offline
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference myRef = database.getReference().child("inventory");//
-//        ArrayList<String> inventoryIdList = new ArrayList();
-//
-//        retrievedItems = new ArrayList<Item>();
-//
-//        myRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    if(task.getResult().exists()){
-//                        Toast.makeText(AddItemActivity.this, "Successfully Read", Toast.LENGTH_SHORT).show();
-//                        DataSnapshot dataSnapshot = task.getResult();
-//                        Log.d("TAGdataSnapshot", "onComplete: dataSnapshot " + dataSnapshot.getValue());
-//
-//                        for(DataSnapshot itemSnapshot: dataSnapshot.getChildren()){
-//                            idTemp = String.valueOf(itemSnapshot.getKey());
-//                             Log.d("TAG idTemp", String.valueOf(idTemp));
-//                            itemCaptured = itemSnapshot.getValue(Item.class);
-//                            Log.d("TAG itemCaptured", String.valueOf(itemCaptured));
-//                            retrievedItems.add(itemCaptured);
-//                        }
-//                        for(Item r : retrievedItems){
-//                            Log.d("TAG retrievedItems Now", r.toString());
-//                        }
-//                    }else{
-//                        Toast.makeText(AddItemActivity.this, "Item Doesn't Exist", Toast.LENGTH_SHORT).show();
-//                    }
-//                } else {
-//                    Toast.makeText(AddItemActivity.this, "Failed To Read", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -441,72 +382,4 @@ public class AddItemActivity extends AppCompatActivity {
             choosenPhotoPath = String.valueOf(data.getData());
         }
     }
-
-//    public void checkAllPermissions(){
-//        checkPermission(android.Manifest.permission.INTERNET, INTERNET_CODE);
-//        checkPermission(android.Manifest.permission.ACCESS_NETWORK_STATE, NETWORK_CODE);
-//        Log.d("taghere", "did pass here");
-//        checkPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE, IMAGE_PICK_CODE);
-////        checkPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
-////        checkPermission(android.Manifest.permission.CAMERA, CAMERA_PERMISSION_CODE);
-//    }
-//
-//
-//    // Function to check and request permission.
-//    public void checkPermission(String permission, int requestCode) {
-//        if (ContextCompat.checkSelfPermission(AddItemActivity.this, permission) == PackageManager.PERMISSION_DENIED) {
-//
-//            // Requesting the permission
-//            ActivityCompat.requestPermissions(AddItemActivity.this, new String[]{permission}, requestCode);
-//        } else {
-//            Toast.makeText(AddItemActivity.this, "Permission already granted", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-//
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode,
-//                                           @NonNull String[] permissions,
-//                                           @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//
-//        if (requestCode == CAMERA_PERMISSION_CODE) {
-//            // Checking whether user granted the permission or not.
-//            if (grantResults.length > 0 &&
-//                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                // Showing the toast message
-//                Toast.makeText(AddItemActivity.this, "Camera Permission Granted", Toast.LENGTH_SHORT).show();
-//            } else {
-//                Toast.makeText(AddItemActivity.this, "Camera Permission Denied", Toast.LENGTH_SHORT).show();
-//            }
-//        } else if (requestCode == STORAGE_PERMISSION_CODE) {
-//            if (grantResults.length > 0
-//                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                Toast.makeText(AddItemActivity.this, "Storage Permission Granted", Toast.LENGTH_SHORT).show();
-//            } else {
-//                Toast.makeText(AddItemActivity.this, "Storage Permission Denied", Toast.LENGTH_SHORT).show();
-//            }
-//        } else if (requestCode == IMAGE_PICK_CODE) {
-//            if (grantResults.length > 0
-//                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                Toast.makeText(AddItemActivity.this, "Gallery Permission Granted", Toast.LENGTH_SHORT).show();
-//            } else {
-//                Toast.makeText(AddItemActivity.this, "Gallery Permission Denied", Toast.LENGTH_SHORT).show();
-//            }
-//        }else if (requestCode == INTERNET_CODE) {
-//            if (grantResults.length > 0
-//                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                Toast.makeText(AddItemActivity.this, "Internet Permission Granted", Toast.LENGTH_SHORT).show();
-//            } else {
-//                Toast.makeText(AddItemActivity.this, "Internet Permission Denied", Toast.LENGTH_SHORT).show();
-//            }
-//        }else if (requestCode == NETWORK_CODE) {
-//            if (grantResults.length > 0
-//                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                Toast.makeText(AddItemActivity.this, "Network Permission Granted", Toast.LENGTH_SHORT).show();
-//            } else {
-//                Toast.makeText(AddItemActivity.this, "Network Permission Denied", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-
-
 }

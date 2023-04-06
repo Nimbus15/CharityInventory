@@ -2,20 +2,32 @@ package com.example.fypproject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.fypproject.models.Item;
+import com.example.fypproject.viewholders.ItemViewHolder;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 
 import java.util.ArrayList;
 
@@ -29,13 +41,25 @@ import java.util.ArrayList;
 public class InventoryActivity extends AppCompatActivity {
 
     private Button addItemButton;
+    private RecyclerView recyclerView;
+    RecyclerView.LayoutManager layoutManager;
+
+    //offline
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference().child("inventory");//
+    //DatabaseReference myItemRef = database.getReference();//
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory);
 
         addItemButton = (Button) findViewById(R.id.add_item);
-        readData();
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,22 +69,85 @@ public class InventoryActivity extends AppCompatActivity {
         });
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //readData();
+
+        FirebaseRecyclerOptions<Item> options =
+                new FirebaseRecyclerOptions.Builder<Item>()
+                        .setQuery(myRef, Item.class)//null?
+                        .build();
+        FirebaseRecyclerAdapter<Item, ItemViewHolder> adapter = new FirebaseRecyclerAdapter<Item, ItemViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull ItemViewHolder holder, int position, @NonNull Item model) {
+                holder.itemIcon.setImageURI(Uri.parse(model.getImage()));
+                holder.textViewItemName.setText(model.getName());
+                Log.d("tagonBindViewHolder", "onBindViewHolder: 0");
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final int itemID = model.getID();//TODO: I Made this static
+
+                        CharSequence[] options = new CharSequence[]{
+                                "Yes",
+                                "No"
+                        };
+                        AlertDialog.Builder builder = new AlertDialog.Builder(InventoryActivity.this);
+                        builder.setTitle("Do you want to delete this product. Are you sure?");
+                        builder.setItems(options, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if(which == 0){
+                                    //deleteItem(itemID);
+                                    //deleteTransactionAssociated(itemID);
+                                    Log.d("TAGonClick0", "onClick: 0");
+                                }
+                                if(which == 1){
+                                    Log.d("TAGonClick1", "onClick: 1");
+                                }
+                            }
+                        });
+                        builder.show();
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row, parent, false);
+                ItemViewHolder holder = new ItemViewHolder(view);
+                return holder;
+            }
+        };
+
+        recyclerView.setAdapter(adapter);
+        adapter.startListening();
+    }
+
+    private void deleteItem(int itemID) {
+        myRef.child(String.valueOf(itemID))
+                .removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(InventoryActivity.this, "This item has been deleted successfully", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     private ArrayList<Item> retrievedItems;
-    private Item retrievedItem;
     String idTemp;
     Item itemCaptured;
     private void readData(){
-
-        //offline
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference().child("inventory");//
-        ArrayList<String> inventoryIdList = new ArrayList();
 
         retrievedItems = new ArrayList<Item>();
 
         myRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
+            public void onComplete(@NonNull Task<DataSnapshot> task) {//Can use query instead
                 if (task.isSuccessful()) {
                     if(task.getResult().exists()){
                         Toast.makeText(InventoryActivity.this, "Successfully Read", Toast.LENGTH_SHORT).show();
