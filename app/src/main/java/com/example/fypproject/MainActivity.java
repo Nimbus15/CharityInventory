@@ -2,10 +2,12 @@ package com.example.fypproject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
 
+import com.example.fypproject.managers.PermissionsManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
@@ -18,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fypproject.databinding.ActivityMainBinding;
 
+
 //TODO: LIST HERE
 //More Complexity?
 //Connect All Activity
@@ -29,12 +32,13 @@ import com.example.fypproject.databinding.ActivityMainBinding;
 //TODO: Other Subject
 //EA-mark, ES-lab + test soon, AI-lab, GE-LAB,
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends PermissionsManager {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
 
     private Button inventoryBtn, transactionsBtn, reportsBtn, expensesBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +67,14 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);//problem
 
+
+        checkAllPermissions();
         inventoryBtn = findViewById(R.id.inventory_button);// change name
         transactionsBtn = findViewById(R.id.transactions_button);// change name
 
 //        startActivityForResult(AddItemActivity);
 //        AddItemActivity.checkAllPermissions();
+
         inventoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
