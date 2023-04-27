@@ -133,6 +133,7 @@ public class AddItemActivity extends AppCompatActivity {
         buttonPlus = findViewById(R.id.buttonPlus);
         buttonMinus = findViewById(R.id.buttonMinus);
 
+        //Add Camera Activity?
         buttonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
