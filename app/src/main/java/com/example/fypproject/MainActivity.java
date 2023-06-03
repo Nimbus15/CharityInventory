@@ -2,7 +2,6 @@ package com.example.fypproject;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
@@ -16,7 +15,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fypproject.databinding.ActivityMainBinding;
 
@@ -38,6 +36,7 @@ public class MainActivity extends PermissionsManager {
     private ActivityMainBinding binding;
 
     private Button inventoryBtn, transactionsBtn, reportsBtn, expensesBtn;
+    private Button registerUserBtn;
 
 
     @Override
@@ -75,6 +74,8 @@ public class MainActivity extends PermissionsManager {
 //        startActivityForResult(AddItemActivity);
 //        AddItemActivity.checkAllPermissions();
 
+        registerUserBtn = findViewById(R.id.registerUserBtn);
+
         inventoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,6 +91,15 @@ public class MainActivity extends PermissionsManager {
                 startActivity(transactionsIntent);
             }
         });
+
+        registerUserBtn.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               Intent registerUserIntent = new Intent(MainActivity.this, RegisterActivity.class);
+               startActivity(registerUserIntent);
+           }
+       });
+
 
 //        reportsBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override

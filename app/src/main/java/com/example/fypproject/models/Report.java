@@ -1,5 +1,5 @@
 package com.example.fypproject.models;
 
-public class Reports {
+public class Report {
 
 }
