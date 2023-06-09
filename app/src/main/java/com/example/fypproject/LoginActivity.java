@@ -48,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         forgetPasswordLink = findViewById(R.id.forget_password_link);
         loadingBar = new ProgressDialog(this);
 
+        //
         chkBoxRememberMe = findViewById(R.id.remember_me_chkb);//Checkbox
         Paper.init(this);
 
