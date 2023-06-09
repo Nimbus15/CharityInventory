@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+//
 public class StartActivity extends AppCompatActivity {
     private Button registerBtn, loginBtn, managerLoginBtn;
 
