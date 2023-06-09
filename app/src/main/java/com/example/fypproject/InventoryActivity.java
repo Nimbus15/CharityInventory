@@ -141,6 +141,7 @@ public class InventoryActivity extends AppCompatActivity {
     private ArrayList<Item> retrievedItems;
     String idTemp;
     Item itemCaptured;
+    //
     private void readData(){
 
         retrievedItems = new ArrayList<Item>();
