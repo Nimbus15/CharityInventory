@@ -77,10 +77,10 @@ public class RegisterActivity extends AppCompatActivity {
 
     //Check phone and then use that phone number to create an account.
     private void validatePhoneNumber(final String name, final String phone, final String password) {
-        final DatabaseReference RootRef;
-        RootRef = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference rootRef;
+        rootRef = FirebaseDatabase.getInstance().getReference();
 
-        RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             //This happens if the data in the field is modified
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -96,7 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                     //Add to list of volunteers's details
                     //
-                    RootRef.child("volunteers").child(phone).updateChildren(accountDatamap)
+                    rootRef.child("volunteers").child(phone).updateChildren(accountDatamap)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
@@ -104,8 +104,8 @@ public class RegisterActivity extends AppCompatActivity {
                                     Toast.makeText(RegisterActivity.this, "Congratulations, your account has been created.", Toast.LENGTH_SHORT).show();
                                     progressDialog.dismiss();
 
-                                    //Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                                    //startActivity(intent);
+                                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                    startActivity(intent);
                                 } else {
                                     progressDialog.dismiss();
                                     Toast.makeText(RegisterActivity.this, "Network Error: Please try again after some time...", Toast.LENGTH_SHORT).show();
