@@ -84,6 +84,7 @@ public class RegisterActivity extends AppCompatActivity {
             //This happens if the data in the field is modified
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //TODO: IF IS MANAGER BUTTON SELECTED DO THIS:
                 //If there is a phone number associated
                 if (!(dataSnapshot.child("volunteers").child(phone).exists())) {
                     HashMap<String, Object> accountDatamap = new HashMap<>();
@@ -92,7 +93,7 @@ public class RegisterActivity extends AppCompatActivity {
                     accountDatamap.put("name", name);
 
                     Log.d("TAGaccountDatamap", "onDataChange: " + accountDatamap);
-                    //HERE: TODO: add the phone again
+                    //TODO: add the phone again
 
                     //Add to list of volunteers's details
                     //
