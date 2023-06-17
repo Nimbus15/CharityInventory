@@ -24,9 +24,6 @@
         android:theme="@style/Theme.FYPProject"
         tools:targetApi="31">
         <activity
-            android:name=".ManagerRegisterActivity"
-            android:exported="false" />
-        <activity
             android:name=".StartActivity"
             android:exported="true">
             <intent-filter>

@@ -33,21 +33,20 @@ import java.util.ArrayList;
 
 
 //TODO: Search
-// Filter?
-// Ordering AZ
-// New folder
+//Filter?
+//Ordering AZ
+//New folder
 //Copy
-// Qty:4
+//Qty:4
 public class InventoryActivity extends AppCompatActivity {
 
     private Button addItemButton;
     private RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
 
-    //offline
+    //offline?
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference().child("inventory");//
-    //DatabaseReference myItemRef = database.getReference();//
+    DatabaseReference myRef = database.getReference().child("inventory");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

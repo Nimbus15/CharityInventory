@@ -90,12 +90,6 @@ public class AddItemActivity extends AppCompatActivity {
 
         db = FirebaseDatabase.getInstance().getReference();
 
-
-//        //Add data from db
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();//duplicate
-//        DatabaseReference myRef = database.getReference("inventory");
-
-        //checkAllPermissions();
         editTextName = (EditText) findViewById(R.id.editTextName);
         editTextDescription = (EditText) findViewById(R.id.editTextDescription);
         editTextQuantity = (EditText) findViewById(R.id.editTextQuantity);
@@ -111,20 +105,16 @@ public class AddItemActivity extends AppCompatActivity {
 
         buttonComplete = findViewById(R.id.buttonComplete);
 
-
-
-        //readData();
         initialisation();
         testInputs();
         buttonComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent itemIntent = new Intent(AddItemActivity.this, InventoryActivity.class);
-//                startActivity(itemIntent);
-                //here//inputItemDetails();
-//                generateANewBarcode();
-//                collateData();
-                //PermissionsManager.checkAllPermissions();
+                //TODO: UNCOMMENT THIS
+
+                // collateData();
+                // Intent itemIntent = new Intent(AddItemActivity.this, InventoryActivity.class);
+                // startActivity(itemIntent);
             }
         });
 
@@ -137,9 +127,7 @@ public class AddItemActivity extends AppCompatActivity {
         buttonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                checkPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE, IMAGE_PICK_CODE);
-//                checkPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
-                //pm.checkPermission(android.Manifest.permission.CAMERA, PermissionsManager.CAMERA_PERMISSION_CODE);
+
                 Toast.makeText(AddItemActivity.this, "CAMERA WORKING", Toast.LENGTH_SHORT).show();
 
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -163,7 +151,6 @@ public class AddItemActivity extends AppCompatActivity {
         buttonGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //pm.checkPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE, PermissionsManager.IMAGE_PICK_CODE);
                 pickImageFromGallery();
             }
         });
@@ -190,7 +177,7 @@ public class AddItemActivity extends AppCompatActivity {
             public void onActivityResult(ActivityResult result) {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     String response = result.getData().getStringExtra(BarcodeActivity.EXTRA_SCANNED_RESULT);
-                    //textViewResponse.setText(response);
+
                     editTextBarcode.setText(response);
                 }
             }
