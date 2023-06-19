@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog loadingBar;
     private TextView managerLink, volunteerLink, forgetPasswordLink;
 
-    private String parentDbName = "volunteers";//change in future
+    private String parentDbName = "VOLUNTEER";//TODO: change in future
     private CheckBox chkBoxRememberMe;
 
     @Override
@@ -133,19 +133,21 @@ public class LoginActivity extends AppCompatActivity {
 
                     if(accountData.getPhone().equals(phone)){
                         if(accountData.getPassword().equals(password)){
-                           if(parentDbName.equals("managers")){
+                           if(parentDbName.equals("MANAGER")){
                                Toast.makeText(LoginActivity.this, "Welcome manager, you are logged in successfully...", Toast.LENGTH_LONG).show();
                                loadingBar.dismiss();
 
                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                startActivity(intent);
-                           } else if(parentDbName.equals("volunteers")){
+                               finish();
+                           } else if(parentDbName.equals("VOLUNTEER")){
                                Toast.makeText(LoginActivity.this, "Logged in successfully...", Toast.LENGTH_LONG).show();
                                loadingBar.dismiss();
 
                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                Prevalent.currentOnlineUser = accountData;
                                startActivity(intent);
+                               finish();
                            }
                         }else{
                             loadingBar.dismiss();
@@ -157,7 +159,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
                 }else{
-                    Toast.makeText(LoginActivity.this, "Account with this " + phone + " number do not exists.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Account with this phone number does not exists.", Toast.LENGTH_SHORT).show();
                     loadingBar.dismiss();
                 }
             }

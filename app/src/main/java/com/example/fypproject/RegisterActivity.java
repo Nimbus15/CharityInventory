@@ -11,11 +11,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
+import com.example.fypproject.enums.Type;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class RegisterActivity extends FragmentActivity {
     private Button buttonCreateAccount;
@@ -32,13 +31,13 @@ public class RegisterActivity extends FragmentActivity {
     private EditText managerEditTextName, managerEditTextPhone, managerEditTextPassword, managerEditTextVerification;
     private ProgressDialog progressDialog;
 
+    //private Type accountType;//?
+    private String typeOfAccount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-
-
 
         buttonCreateAccount = (Button) findViewById(R.id.buttonRegister);//
         editTextName = (EditText) findViewById(R.id.editTextUsername);
@@ -55,96 +54,136 @@ public class RegisterActivity extends FragmentActivity {
 
 
         progressDialog = new ProgressDialog(this);
+        //Log.d("Type.VOLUNTEER", String.valueOf(Type.VOLUNTEER));
+        Log.d("working", "working");
 
-        editTextName.setVisibility(View.VISIBLE);
-        editTextPhone.setVisibility(View.VISIBLE);
-        editTextPassword.setVisibility(View.VISIBLE);
+        //TODO: CONTINUE HERE
+        System.out.println("COMPARISON");
 
-        managerEditTextName.setVisibility(View.INVISIBLE);
-        managerEditTextPhone.setVisibility(View.INVISIBLE);
-        managerEditTextPassword.setVisibility(View.INVISIBLE);
-        managerEditTextVerification.setVisibility(View.INVISIBLE);
+        Intent intent = getIntent();
+        typeOfAccount = intent.getStringExtra("accountType"); // Replace "key" with the same key used in the sending activity
+        Log.d("LogTag", "the account type is:" +  typeOfAccount);
+
+        if(Objects.equals(typeOfAccount, String.valueOf(Type.VOLUNTEER))){
+            Log.d("Tag\"Volunteer works\"", "Volunteer works");
+
+            editTextName.setVisibility(View.VISIBLE);
+            editTextPhone.setVisibility(View.VISIBLE);
+            editTextPassword.setVisibility(View.VISIBLE);
+
+            managerEditTextName.setVisibility(View.INVISIBLE);
+            managerEditTextPhone.setVisibility(View.INVISIBLE);
+            managerEditTextPassword.setVisibility(View.INVISIBLE);
+            managerEditTextVerification.setVisibility(View.INVISIBLE);
+
+        }else if(Objects.equals(typeOfAccount,  String.valueOf(Type.MANAGER))){
+            Log.d("TagManager works", "Manager works");
+
+            editTextName.setVisibility(View.INVISIBLE);
+            editTextPhone.setVisibility(View.INVISIBLE);
+            editTextPassword.setVisibility(View.INVISIBLE);
+
+            managerEditTextName.setVisibility(View.VISIBLE);
+            managerEditTextPhone.setVisibility(View.VISIBLE);
+            managerEditTextPassword.setVisibility(View.VISIBLE);
+            managerEditTextVerification.setVisibility(View.VISIBLE);
+        }
 
         buttonCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createAccount();
+                if(validateAccountSuccessful()){
+                    createAccount(name, phone, password);
+                }
+
             }
         });
     }
 
-    private void createAccount() {
+    String name, phone, password, verificationKey;
 
-        String name = editTextName.getText().toString();
-        String phone = editTextPhone.getText().toString();
-        String password = editTextPassword.getText().toString();
+    private boolean validateAccountSuccessful() {
+        int numOfErrors=0;
+        if(typeOfAccount.equals("VOLUNTEER")){
+            name = editTextName.getText().toString();
+            phone = editTextPhone.getText().toString();
+            password = editTextPassword.getText().toString();
 
-        if (TextUtils.isEmpty(name)) {
-            Toast.makeText(this, "Please write your name...", Toast.LENGTH_SHORT).show();
-        } else if (TextUtils.isEmpty(phone)) {
-            Toast.makeText(this, "Please write your phone number...", Toast.LENGTH_SHORT).show();
-        } else if (TextUtils.isEmpty(password)) {
-            Toast.makeText(this, "Please write your password...", Toast.LENGTH_SHORT).show();
-        } else {
-            progressDialog.setTitle("Create Account");
-            progressDialog.setMessage("Please wait, while we are checking the credentials.");
-            progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.show();
+            if (TextUtils.isEmpty(name)) {
+                Toast.makeText(this, "Please write your name...", Toast.LENGTH_SHORT).show();
+                numOfErrors++;
+            } else if (TextUtils.isEmpty(phone)) {
+                Toast.makeText(this, "Please write your phone number...", Toast.LENGTH_SHORT).show();
+                numOfErrors++;
+            } else if (TextUtils.isEmpty(password)) {
+                Toast.makeText(this, "Please write your password...", Toast.LENGTH_SHORT).show();
+                numOfErrors++;
+            }
 
-            validatePhoneNumber(name, phone, password);
+            if(numOfErrors==0) {
+                progressDialog.setTitle("Creating Account");
+                progressDialog.setMessage("Please wait, while we are checking the credentials.");
+                progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.show();
 
+                return true;
+                //HOW DOES IT MOVE TO NEXT FUNCTION?
+            }
+        } else if(typeOfAccount.equals("MANAGER")){
+            name = managerEditTextName.getText().toString();
+            phone = managerEditTextPhone.getText().toString();
+            password = managerEditTextPassword.getText().toString();
+            verificationKey = managerEditTextVerification.getText().toString();
 
-            //HOW DOES IT MOVE TO NEXT FUNCTIONS
+            if (TextUtils.isEmpty(name)) {
+                Toast.makeText(this, "Please write your name...", Toast.LENGTH_SHORT).show();
+                numOfErrors++;
+            } else if (TextUtils.isEmpty(phone)) {
+                Toast.makeText(this, "Please write your phone number...", Toast.LENGTH_SHORT).show();
+                numOfErrors++;
+            } else if (TextUtils.isEmpty(password)) {
+                Toast.makeText(this, "Please write your password...", Toast.LENGTH_SHORT).show();
+                numOfErrors++;
+            } else if (TextUtils.isEmpty(password)){
+                Toast.makeText(this, "Please write your verification key...", Toast.LENGTH_SHORT).show();
+                numOfErrors++;
+            } else if (Integer.parseInt(verificationKey) != 5678){
+                Toast.makeText(this, "Verification key declined", Toast.LENGTH_SHORT).show();
+                numOfErrors++;
+            }
+            Log.d("verificationKey", verificationKey);
 
+            if(numOfErrors==0) {
+                progressDialog.setTitle("Creating Manager Account");
+                progressDialog.setMessage("Please wait, while we are checking the credentials.");
+                progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.show();
+
+                //HOW DOES IT MOVE TO NEXT FUNCTION?
+                return true;
+            }
         }
+        return false;
     }
 
+
     //Check phone and then use that phone number to create an account.
-    private void validatePhoneNumber(final String name, final String phone, final String password) {
-        final DatabaseReference rootRef;
-        rootRef = FirebaseDatabase.getInstance().getReference();
+    private void createAccount(final String name, final String phone, final String password) {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference rootRef = database.getReference();
+
+
+        DatabaseReference childRef = rootRef.child(typeOfAccount);
+
+
+        //TODO: [ROOT]//{ACCOUNTYPE}
+        //TODO: ADD ACCOUNT TYPE
 
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             //This happens if the data in the field is modified
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //TODO: IF IS MANAGER BUTTON SELECTED DO THIS:
-                //If there is a phone number associated
-                if (!(dataSnapshot.child("volunteers").child(phone).exists())) {
-                    HashMap<String, Object> accountDatamap = new HashMap<>();
-                    accountDatamap.put("phone", phone);
-                    accountDatamap.put("password", password);
-                    accountDatamap.put("name", name);
-
-                    Log.d("TAGaccountDatamap", "onDataChange: " + accountDatamap);
-                    //TODO: add the phone again
-
-                    //Add to list of volunteers's details
-                    rootRef.child("volunteers").child(phone).updateChildren(accountDatamap)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(RegisterActivity.this, "Congratulations, your account has been created.", Toast.LENGTH_SHORT).show();
-                                        progressDialog.dismiss();
-
-                                        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                                        startActivity(intent);
-                                    } else {
-                                        progressDialog.dismiss();
-                                        Toast.makeText(RegisterActivity.this, "Network Error: Please try again after some time...", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-
-                } else {//TODO: Make sure this does not affect the application
-                    Toast.makeText(RegisterActivity.this, "This " + phone + " already exists.", Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
-                    Toast.makeText(RegisterActivity.this, "Please try again using another phone number.", Toast.LENGTH_SHORT).show();
-
-                    Intent mainIntent = new Intent(RegisterActivity.this, MainActivity.class);
-                    startActivity(mainIntent);
-                }
+                accessDatabase(dataSnapshot, phone, password, name, rootRef);
             }
 
             @Override
@@ -153,7 +192,51 @@ public class RegisterActivity extends FragmentActivity {
 
                 Intent mainIntent = new Intent(RegisterActivity.this, MainActivity.class);
                 startActivity(mainIntent);
+                finish();
             }
         });
+    }
+
+    private void accessDatabase(@NonNull DataSnapshot dataSnapshot, String phone, String password, String name, DatabaseReference rootRef) {
+        //TODO: IF IS MANAGER BUTTON SELECTED DO THIS:
+        //TODO: USE A FUNCTION TO REPEAT LOGIC
+        //If there is a phone number associated
+        if (!(dataSnapshot.child(typeOfAccount).child(phone).exists())) {
+            HashMap<String, Object> accountDatamap = new HashMap<>();
+            accountDatamap.put("phone", phone);
+            accountDatamap.put("password", password);
+            accountDatamap.put("name", name);
+
+            Log.d("TAGaccountDatamap", "onDataChange: " + accountDatamap);
+            //TODO: add the phone again
+
+            //Add to list of volunteers's details
+            rootRef.child(typeOfAccount).child(phone).updateChildren(accountDatamap)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(RegisterActivity.this, "Congratulations, your account has been created.", Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
+
+                                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(RegisterActivity.this, "Network Error: Please try again after some time...", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+            } else {//TODO: Make sure this does not affect the application
+                Toast.makeText(RegisterActivity.this, "This number: " + phone + " already exists.", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+                Toast.makeText(RegisterActivity.this, "Please try again using another phone number.", Toast.LENGTH_SHORT).show();
+
+                Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(loginIntent);
+                finish();
+            }
     }
 }
