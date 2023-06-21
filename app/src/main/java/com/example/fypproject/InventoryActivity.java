@@ -1,5 +1,7 @@
 package com.example.fypproject;
 
+import static com.example.fypproject.globals.Globals.INVENTORY_WORD;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,7 +48,7 @@ public class InventoryActivity extends AppCompatActivity {
 
     //offline?
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference().child("inventory");
+    DatabaseReference myRef = database.getReference().child(INVENTORY_WORD);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

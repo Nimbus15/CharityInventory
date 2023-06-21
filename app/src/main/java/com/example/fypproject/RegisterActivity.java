@@ -1,5 +1,9 @@
 package com.example.fypproject;
 
+import static com.example.fypproject.globals.Globals.ACCOUNT_TYPE_WORD;
+import static com.example.fypproject.globals.Globals.MANAGER_WORD;
+import static com.example.fypproject.globals.Globals.VOLUNTEER_WORD;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -61,7 +65,7 @@ public class RegisterActivity extends FragmentActivity {
         System.out.println("COMPARISON");
 
         Intent intent = getIntent();
-        typeOfAccount = intent.getStringExtra("accountType"); // Replace "key" with the same key used in the sending activity
+        typeOfAccount = intent.getStringExtra(ACCOUNT_TYPE_WORD); // Replace "key" with the same key used in the sending activity
         Log.d("LogTag", "the account type is:" +  typeOfAccount);
 
         if(Objects.equals(typeOfAccount, String.valueOf(Type.VOLUNTEER))){
@@ -104,7 +108,7 @@ public class RegisterActivity extends FragmentActivity {
 
     private boolean validateAccountSuccessful() {
         int numOfErrors=0;
-        if(typeOfAccount.equals("VOLUNTEER")){
+        if(typeOfAccount.equals(VOLUNTEER_WORD)){
             name = editTextName.getText().toString();
             phone = editTextPhone.getText().toString();
             password = editTextPassword.getText().toString();
@@ -129,7 +133,7 @@ public class RegisterActivity extends FragmentActivity {
                 return true;
                 //HOW DOES IT MOVE TO NEXT FUNCTION?
             }
-        } else if(typeOfAccount.equals("MANAGER")){
+        } else if(typeOfAccount.equals(MANAGER_WORD)){
             name = managerEditTextName.getText().toString();
             phone = managerEditTextPhone.getText().toString();
             password = managerEditTextPassword.getText().toString();
@@ -191,8 +195,9 @@ public class RegisterActivity extends FragmentActivity {
                 Toast.makeText(RegisterActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
 
                 Intent mainIntent = new Intent(RegisterActivity.this, MainActivity.class);
+                mainIntent.putExtra(ACCOUNT_TYPE_WORD, typeOfAccount);
                 startActivity(mainIntent);
-                finish();
+                //finish();
             }
         });
     }
@@ -220,8 +225,9 @@ public class RegisterActivity extends FragmentActivity {
                                 progressDialog.dismiss();
 
                                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                intent.putExtra(ACCOUNT_TYPE_WORD, typeOfAccount);
                                 startActivity(intent);
-                                finish();
+                                //finish();
                             } else {
                                 progressDialog.dismiss();
                                 Toast.makeText(RegisterActivity.this, "Network Error: Please try again after some time...", Toast.LENGTH_SHORT).show();
@@ -235,8 +241,9 @@ public class RegisterActivity extends FragmentActivity {
                 Toast.makeText(RegisterActivity.this, "Please try again using another phone number.", Toast.LENGTH_SHORT).show();
 
                 Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
+                loginIntent.putExtra(ACCOUNT_TYPE_WORD, typeOfAccount);
                 startActivity(loginIntent);
-                finish();
+                //finish();
             }
     }
 }

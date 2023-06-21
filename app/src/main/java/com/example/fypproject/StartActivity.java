@@ -1,5 +1,9 @@
 package com.example.fypproject;
 
+import static com.example.fypproject.globals.Globals.ACCOUNT_TYPE_WORD;
+import static com.example.fypproject.globals.Globals.MANAGER_WORD;
+import static com.example.fypproject.globals.Globals.VOLUNTEER_WORD;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -27,8 +31,9 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent loginIntent = new Intent(StartActivity.this, LoginActivity.class);
+                loginIntent.putExtra(ACCOUNT_TYPE_WORD, VOLUNTEER_WORD);
                 startActivity(loginIntent);
-                finish();
+                //finish();
             }
         });
 
@@ -36,8 +41,9 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent managerLoginIntent = new Intent(StartActivity.this, LoginActivity.class);
+                managerLoginIntent.putExtra(ACCOUNT_TYPE_WORD, MANAGER_WORD);
                 startActivity(managerLoginIntent);
-                finish();
+                //finish();
             }
         });
 
@@ -45,9 +51,9 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent registerIntent = new Intent(StartActivity.this, RegisterActivity.class);
-                registerIntent.putExtra("accountType", "VOLUNTEER");
+                registerIntent.putExtra(ACCOUNT_TYPE_WORD, VOLUNTEER_WORD);
                 startActivity(registerIntent);
-                finish();
+                //finish();
             }
         });
 
@@ -56,9 +62,9 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent managerRegisterIntent = new Intent(StartActivity.this, RegisterActivity.class);
-                managerRegisterIntent.putExtra("accountType", "MANAGER");
+                managerRegisterIntent.putExtra(ACCOUNT_TYPE_WORD, MANAGER_WORD);
                 startActivity(managerRegisterIntent);
-                finish();
+                //finish();
             }
         });
     }

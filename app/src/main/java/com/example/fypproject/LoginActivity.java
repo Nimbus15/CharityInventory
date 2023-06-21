@@ -1,9 +1,14 @@
 package com.example.fypproject;
 
+import static com.example.fypproject.globals.Globals.ACCOUNT_TYPE_WORD;
+import static com.example.fypproject.globals.Globals.MANAGER_WORD;
+import static com.example.fypproject.globals.Globals.VOLUNTEER_WORD;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -32,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog loadingBar;
     private TextView managerLink, volunteerLink, forgetPasswordLink;
 
-    private String parentDbName = "VOLUNTEER";//TODO: change in future
+    private String parentDbName = VOLUNTEER_WORD;//TODO: change in future
     private CheckBox chkBoxRememberMe;
 
     @Override
@@ -52,7 +57,9 @@ public class LoginActivity extends AppCompatActivity {
         chkBoxRememberMe = findViewById(R.id.remember_me_chkb);//Checkbox
         Paper.init(this);
 
-
+        Intent intent = getIntent();
+        //String typeOfAccountRetrieved = intent.getStringExtra("accountType");
+        parentDbName = intent.getStringExtra(ACCOUNT_TYPE_WORD);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
@@ -76,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                 loginButton.setText("Manager Login");
                 managerLink.setVisibility(View.INVISIBLE);
                 volunteerLink.setVisibility(View.VISIBLE);
-                parentDbName = "managers";
+                parentDbName = MANAGER_WORD;//"managers";
             }
         });
 
@@ -87,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                 loginButton.setText("Login");
                 managerLink.setVisibility(View.VISIBLE);
                 volunteerLink.setVisibility(View.INVISIBLE);
-                parentDbName = "volunteers";
+                parentDbName = VOLUNTEER_WORD;//"volunteers";
             }
         });
 
@@ -133,21 +140,22 @@ public class LoginActivity extends AppCompatActivity {
 
                     if(accountData.getPhone().equals(phone)){
                         if(accountData.getPassword().equals(password)){
-                           if(parentDbName.equals("MANAGER")){
+                           if(parentDbName.equals(MANAGER_WORD)){
                                Toast.makeText(LoginActivity.this, "Welcome manager, you are logged in successfully...", Toast.LENGTH_LONG).show();
                                loadingBar.dismiss();
 
                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                               Prevalent.currentOnlineUser = accountData;
                                startActivity(intent);
-                               finish();
-                           } else if(parentDbName.equals("VOLUNTEER")){
+                               //finish();
+                           } else if(parentDbName.equals(VOLUNTEER_WORD)){
                                Toast.makeText(LoginActivity.this, "Logged in successfully...", Toast.LENGTH_LONG).show();
                                loadingBar.dismiss();
 
                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                Prevalent.currentOnlineUser = accountData;
                                startActivity(intent);
-                               finish();
+                               //finish();
                            }
                         }else{
                             loadingBar.dismiss();
