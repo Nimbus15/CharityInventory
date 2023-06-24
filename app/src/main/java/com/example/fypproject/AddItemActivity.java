@@ -1,6 +1,8 @@
 package com.example.fypproject;
 
 
+import static com.example.fypproject.globals.Globals.INVENTORY_WORD;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -290,7 +292,7 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     private void writeToDatabase(Item item2) {
-        db.child("inventory").child(String.valueOf(ID)).setValue(item2).addOnCompleteListener(new OnCompleteListener<Void>() {
+        db.child(INVENTORY_WORD).child(String.valueOf(ID)).setValue(item2).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
@@ -343,6 +345,14 @@ public class AddItemActivity extends AppCompatActivity {
         intent.setType("image/*");
         startActivityForResult(intent, PermissionsManager.IMAGE_PICK_CODE);
     }
+
+    //TODO: CONVERT IMAGEVIEW TO BITMAP -> FIREBASE FILE UPLOAD DOCUMENTATION
+    //SHOW PROGRESS BAR
+    //DISABLE CLICKS ON THE BUTTONS ON THE SCREEN -> NO DOUBLECLICK
+    //UPLOAD BITMAP TO THE FIREBASE STORAGE
+    //THEN I GET A URL ON SUCCESS
+    //PUT THE URL INTO THE REALTIME FIREBASE
+    //REMOVE PROGRESS BAR
 
 
     @Override

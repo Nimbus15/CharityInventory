@@ -75,7 +75,7 @@ public class InventoryActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //readData();
-
+        //TODO: CONVERT THIS INTO VIEWING INSTEAD OF DELETION
         FirebaseRecyclerOptions<Item> options =
                 new FirebaseRecyclerOptions.Builder<Item>()
                         .setQuery(myRef, Item.class)//null?
@@ -86,7 +86,7 @@ public class InventoryActivity extends AppCompatActivity {
                 holder.itemIcon.setImageURI(Uri.parse(model.getImage()));
                 holder.textViewItemName.setText(model.getName());
                 Log.d("tagonBindViewHolder", "onBindViewHolder: 0");
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         final int itemID = model.getID();//TODO: I Made this static
@@ -101,7 +101,7 @@ public class InventoryActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if(which == 0){
-                                    //deleteItem(itemID);
+                                    deleteItem(itemID);
                                     //deleteTransactionAssociated(itemID);
                                     Log.d("TAGonClick0", "onClick: 0");
                                 }
@@ -111,6 +111,14 @@ public class InventoryActivity extends AppCompatActivity {
                             }
                         });
                         builder.show();
+                    }
+                });
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(InventoryActivity.this,ViewItemActivity.class);
+                        intent.putExtra(ViewItemActivity.EXTRA_ITEM,model);
+                        startActivity(intent);
                     }
                 });
             }
@@ -175,4 +183,5 @@ public class InventoryActivity extends AppCompatActivity {
             }
         });
     }
+
 }

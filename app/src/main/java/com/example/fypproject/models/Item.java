@@ -1,6 +1,8 @@
 package com.example.fypproject.models;
 
-public class Item {
+import java.io.Serializable;
+
+public class Item implements Serializable {
     private int ID;
     private String name;
     private String desc;

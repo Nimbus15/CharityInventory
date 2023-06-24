@@ -132,7 +132,6 @@
         android:padding="17dp"
         android:text="Create Account"
         android:textAllCaps="false"
-        android:textColor="@android:color/holo_purple"
         android:textSize="18sp" />
 
 </RelativeLayout>
