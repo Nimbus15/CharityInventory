@@ -170,6 +170,7 @@ public class MainActivity extends PermissionsManager {
                         public void onSuccess(Void aVoid) {
                             // Data has been successfully written to Firestore
                             Log.d("Firestore", "Data written successfully");
+                            //return false;
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

@@ -78,6 +78,7 @@ public class BarcodeActivity extends AppCompatActivity {
                                 finish();
                             }
                         }
+                        //return false;
                     }
                 });
             }

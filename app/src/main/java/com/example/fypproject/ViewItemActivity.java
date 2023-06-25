@@ -1,6 +1,9 @@
 package com.example.fypproject;
 
+import static com.example.fypproject.globals.Globals.INVENTORY_WORD;
+
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -15,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fypproject.models.Item;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -22,6 +27,9 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ViewItemActivity extends AppCompatActivity {
     public static final String EXTRA_ITEM = "extra_item";
@@ -62,7 +70,7 @@ public class ViewItemActivity extends AppCompatActivity {
         }
     }
 
-
+    Item item;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +94,7 @@ public class ViewItemActivity extends AppCompatActivity {
 
         buttonComplete = findViewById(R.id.buttonComplete);
 
-        Item item = (Item) getIntent().getSerializableExtra(EXTRA_ITEM);
+        item = (Item) getIntent().getSerializableExtra(EXTRA_ITEM);
         Toast.makeText(this, item.toString(), Toast.LENGTH_SHORT).show();
         
         populateFromItem(item);
@@ -94,7 +102,8 @@ public class ViewItemActivity extends AppCompatActivity {
         buttonComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               Snackbar.make(view ,"buttonComplete was clicked", Snackbar.LENGTH_SHORT).show();
+                updateDetailsInDatabase();
+                Snackbar.make(view ,"buttonComplete was clicked", Snackbar.LENGTH_SHORT).show();
             }
         });
     }
@@ -111,5 +120,55 @@ public class ViewItemActivity extends AppCompatActivity {
         editTextPrice.setText(String.valueOf(_item.getPrice()));
         editTextNote.setText(_item.getNotes());
         editTextApproval.setText(_item.getApproved());
+    }
+
+    int ID;
+    String name, description, brand, category,
+            barcode, notes, approval;
+    String defaultUri, newUri;
+    int quantity, minQuantity;
+    float price;
+
+    private void getTextFromField(){
+        ID = item.getID();
+
+        approval = editTextApproval.getText().toString();
+        barcode = editTextBarcode.getText().toString();
+        brand = editTextBrand.getText().toString();
+        description = editTextDescription.getText().toString();
+
+    }
+
+
+    private void updateDetailsInDatabase() {
+        getTextFromField();
+        // Obtain a reference to the location of the record you want to update
+        DatabaseReference databaseRef =
+                FirebaseDatabase.getInstance().getReference(INVENTORY_WORD).child(String.valueOf(ID));
+
+        // Create a map to hold the updated data
+        Map<String, Object> changes = new HashMap<>();
+        changes.put("approved", approval);
+        changes.put("barcode",  barcode);
+        changes.put("brand", brand);
+        changes.put("desc", description);
+
+
+        // Update the record
+        databaseRef.updateChildren(changes)
+            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    // Data updated successfully
+                    Toast.makeText(getApplicationContext(), "Data updated successfully", Toast.LENGTH_SHORT).show();
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    // An error occurred while updating data
+                    Toast.makeText(getApplicationContext(), "Data update failed", Toast.LENGTH_SHORT).show();
+                }
+            });
     }
 }

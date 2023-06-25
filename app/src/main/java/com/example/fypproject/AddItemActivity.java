@@ -43,7 +43,6 @@ import com.google.zxing.common.BitMatrix;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -106,24 +105,16 @@ public class AddItemActivity extends AppCompatActivity {
         imageProfile.setImageResource(R.drawable.image_placeholder);
 
         buttonComplete = findViewById(R.id.buttonComplete);
-
-        initialisation();
-        testInputs();
-        buttonComplete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO: UNCOMMENT THIS
-
-                // collateData();
-                // Intent itemIntent = new Intent(AddItemActivity.this, InventoryActivity.class);
-                // startActivity(itemIntent);
-            }
-        });
-
         buttonCamera = findViewById(R.id.buttonCamera);
         buttonGallery = findViewById(R.id.buttonGallery);
         buttonPlus = findViewById(R.id.buttonPlus);
         buttonMinus = findViewById(R.id.buttonMinus);
+
+        buttonBarcode = findViewById(R.id.buttonBarcode);
+
+
+        //setVariablesWithNulls();
+        setVariablesWithTestData();
 
         //Add Camera Activity?
         buttonCamera.setOnClickListener(new View.OnClickListener() {
@@ -173,7 +164,6 @@ public class AddItemActivity extends AppCompatActivity {
             }
         });
 
-        buttonBarcode = findViewById(R.id.buttonBarcode);
         barcodeActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
@@ -192,6 +182,17 @@ public class AddItemActivity extends AppCompatActivity {
                 barcodeActivityLauncher.launch(intent);
             }
         });
+
+        buttonComplete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO: UNCOMMENT THIS
+
+                // writeToDatabase();
+                // Intent itemIntent = new Intent(AddItemActivity.this, InventoryActivity.class);
+                // startActivity(itemIntent);
+            }
+        });
     }
 
     int ID;
@@ -201,28 +202,28 @@ public class AddItemActivity extends AppCompatActivity {
     int quantity, minQuantity;
     float price;
 
-    private void initialisation() {
-        //initialisation with default - declare here
-        ID = 0;
-        name = "null";
-        description = "null";
-        quantity = 0;
-        minQuantity = 0;
-        brand = "brand";
-        category = "null";
-        barcode = "00000";
-        price = 0.0f;
-        notes = "null";
-        approval = "null";
-        testInputs();
-
-        imageFile = new File("/storage/self/primary/Pictures/new_image.jpeg");
-        setFields();
-    }
+//    private void setVariablesWithNulls() {
+//        //initialisation with default - declare here
+//        ID = 0;
+//        name = "null";
+//        description = "null";
+//        quantity = 0;
+//        minQuantity = 0;
+//        brand = "brand";
+//        category = "null";
+//        barcode = "00000";
+//        price = 0.0f;
+//        notes = "null";
+//        approval = "null";
+//        setVariablesWithTestData();
+//
+//        imageFile = new File("/storage/self/primary/Pictures/new_image.jpeg");
+//        setTextFromVariables();
+//    }
 
     File imageFile;
 
-    private void testInputs() {
+    private void setVariablesWithTestData() {
         ID = 113;
         name = "testname";
         description = "testdesc";
@@ -234,11 +235,12 @@ public class AddItemActivity extends AppCompatActivity {
         price = 0.0f;
         notes = "testnotes";
         approval = "no";
+
         imageFile = new File("/storage/self/primary/Pictures/new_image.jpeg");
-        setFields();
+        setTextFromVariables();
     }
 
-    private void setFields() {
+    private void setTextFromVariables() {
         editTextName.setText(name);
         editTextDescription.setText(description);
         editTextQuantity.setText(String.valueOf(quantity));
@@ -258,7 +260,7 @@ public class AddItemActivity extends AppCompatActivity {
         }
     }
 
-    private void getInputs() {
+    private void getTextFromFields() {
         name = editTextName.getText().toString();
         description = editTextDescription.getText().toString();
         quantity = Integer.parseInt(editTextQuantity.getText().toString());
@@ -272,26 +274,10 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     private String choosenPhotoPath;
-
-    private void collateData() {
-        //initialisation();
-
-//        Item item = new Item(ID, name, description, category, quantity,
-//                minQuantity, brand, barcode, defaultUri, notes, price, approval);
-//        System.out.println(item.toString());
-
-        getInputs();
-
+    private void writeToDatabase() {
+        getTextFromFields();
         Item item2 = new Item(ID, name, description, category, quantity,
                 minQuantity, brand, barcode, choosenPhotoPath, notes, price, approval);
-
-        System.out.println(item2.toString());
-
-        //add to database
-        //writeToDatabase(item2);
-    }
-
-    private void writeToDatabase(Item item2) {
         db.child(INVENTORY_WORD).child(String.valueOf(ID)).setValue(item2).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
