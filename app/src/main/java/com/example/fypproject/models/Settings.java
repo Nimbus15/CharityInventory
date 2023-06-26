@@ -1,4 +1,4 @@
 package com.example.fypproject.models;
 
-public class Settings {
+public class Settings {//delete?
 }

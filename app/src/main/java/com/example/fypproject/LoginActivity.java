@@ -126,6 +126,8 @@ public class LoginActivity extends AppCompatActivity {
         if(chkBoxRememberMe.isChecked()){
             Paper.book().write(Prevalent.ACCOUNT_PHONE_KEY, phone);
             Paper.book().write(Prevalent.ACCOUNT_PASSWORD_KEY, password);
+        }else{
+            Paper.book().destroy();
         }
 
         final DatabaseReference rootRef;
@@ -146,6 +148,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                Prevalent.currentOnlineUser = accountData;
+                               intent.putExtra(ACCOUNT_TYPE_WORD, parentDbName);
                                startActivity(intent);
                                //finish();
                            } else if(parentDbName.equals(VOLUNTEER_WORD)){
@@ -154,6 +157,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                Prevalent.currentOnlineUser = accountData;
+                               intent.putExtra(ACCOUNT_TYPE_WORD, parentDbName);
                                startActivity(intent);
                                //finish();
                            }

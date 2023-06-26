@@ -1,5 +1,6 @@
 package com.example.fypproject;
 
+import static com.example.fypproject.MainActivity.numItemsInInventory;
 import static com.example.fypproject.globals.Globals.INVENTORY_WORD;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fypproject.models.Item;
@@ -43,6 +46,7 @@ import java.util.ArrayList;
 public class InventoryActivity extends AppCompatActivity {
 
     private Button addItemButton;
+    private TextView numItemTextView;
     private RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
 
@@ -56,6 +60,7 @@ public class InventoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_inventory);
 
         addItemButton = (Button) findViewById(R.id.add_item);
+        numItemTextView = (TextView) findViewById(R.id.numItemTextView);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
@@ -68,6 +73,7 @@ public class InventoryActivity extends AppCompatActivity {
                 startActivity(addItemIntent);
             }
         });
+        numItemTextView.setText((int) numItemsInInventory);
     }
 
 
@@ -152,7 +158,6 @@ public class InventoryActivity extends AppCompatActivity {
     Item itemCaptured;
     //
     private void readData(){
-
         retrievedItems = new ArrayList<Item>();
 
         myRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
