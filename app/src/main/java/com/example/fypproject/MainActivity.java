@@ -2,6 +2,7 @@ package com.example.fypproject;
 
 import static com.example.fypproject.globals.Globals.ACCOUNT_TYPE_WORD;
 import static com.example.fypproject.globals.Globals.INVENTORY_WORD;
+import static com.example.fypproject.globals.Globals.NUM_ITEMS_IN_INVENTORY_WORD;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -67,7 +68,7 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
 
     private TextView nameTextView;
     private ImageView userImageView;
-    protected static long numItemsInInventory;//hack//
+    //private int numItemsInInventory=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +111,7 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
         nameTextView= headerView.findViewById(R.id.usernameTextView);
         userImageView = headerView.findViewById(R.id.userImageView);
 
-//        startActivityForResult(AddItemActivity);
+
 //        AddItemActivity.checkAllPermissions();
 
         //backupBtn = findViewById(R.id.backupBtn);
@@ -147,9 +148,11 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
 //        });
         if(typeOfAccount.equals("VOLUNTEER") || typeOfAccount.equals("MANAGER")){
             nameTextView.setText(Prevalent.currentOnlineUser.getName());
-            //userImageView.
-
-            Picasso.get().load(R.drawable.ic_user_image).placeholder(R.drawable.ic_user_image).into(userImageView);
+            Picasso.get()
+                    .load(R.drawable.ic_user_image)
+                    .resize(400, 400)
+                    .placeholder(R.drawable.ic_user_image)
+                    .into(userImageView);
         }
     }
 
@@ -159,27 +162,20 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // Retrieve the data from the dataSnapshot
-                numItemsInInventory = dataSnapshot.getChildrenCount();
+                //numItemsInInventory = (int) dataSnapshot.getChildrenCount();
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     Item retrievedItem = userSnapshot.getValue(Item.class);
 
-
-                    // Process the retrieved data
                     if (retrievedItem != null) {
-                        // Perform operations with the retrieved values
-                        // Example: Create a user object and add it to a list
-
                         charityInventory.add(retrievedItem);
                     }
                 }
-                // Write the data to Cloud Firestore
                 writeToFirestore();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle any errors that occur during data retrieval
+
             }
         });
     }
@@ -220,7 +216,7 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
         int id = item.getItemId();
 
         if(id == R.id.action_settings){
-//            Intent intent = new Intent(MainActivity.this, InventoryActivity.class);
+//            Intent intent = new Intent(MainActivity.this, SettingActivity.class);
 //            startActivity(intent);
             Toast.makeText(this, "THIS in mainactivity setting INCOMPLETE", Toast.LENGTH_SHORT).show();
         }

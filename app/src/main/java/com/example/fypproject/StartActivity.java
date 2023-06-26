@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-//
+
 public class StartActivity extends AppCompatActivity {
     private Button registerBtn, loginBtn;
     private Button managerRegisterBtn, managerLoginBtn;
@@ -43,7 +43,6 @@ public class StartActivity extends AppCompatActivity {
                 Intent managerLoginIntent = new Intent(StartActivity.this, LoginActivity.class);
                 managerLoginIntent.putExtra(ACCOUNT_TYPE_WORD, MANAGER_WORD);
                 startActivity(managerLoginIntent);
-                //finish();
             }
         });
 
@@ -53,18 +52,16 @@ public class StartActivity extends AppCompatActivity {
                 Intent registerIntent = new Intent(StartActivity.this, RegisterActivity.class);
                 registerIntent.putExtra(ACCOUNT_TYPE_WORD, VOLUNTEER_WORD);
                 startActivity(registerIntent);
-                //finish();
             }
         });
 
-        //Register
+
         managerRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent managerRegisterIntent = new Intent(StartActivity.this, RegisterActivity.class);
                 managerRegisterIntent.putExtra(ACCOUNT_TYPE_WORD, MANAGER_WORD);
                 startActivity(managerRegisterIntent);
-                //finish();
             }
         });
     }

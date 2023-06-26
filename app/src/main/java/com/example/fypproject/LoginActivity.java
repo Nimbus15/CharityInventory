@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog loadingBar;
     private TextView managerLink, volunteerLink, forgetPasswordLink;
 
-    private String parentDbName = VOLUNTEER_WORD;//TODO: change in future
+    private String parentDbName = VOLUNTEER_WORD;
     private CheckBox chkBoxRememberMe;
 
     @Override
@@ -53,12 +53,11 @@ public class LoginActivity extends AppCompatActivity {
         forgetPasswordLink = findViewById(R.id.forget_password_link);
         loadingBar = new ProgressDialog(this);
 
-        ////
-        chkBoxRememberMe = findViewById(R.id.remember_me_chkb);//Checkbox
+
+        chkBoxRememberMe = findViewById(R.id.remember_me_chkb);
         Paper.init(this);
 
         Intent intent = getIntent();
-        //String typeOfAccountRetrieved = intent.getStringExtra("accountType");
         parentDbName = intent.getStringExtra(ACCOUNT_TYPE_WORD);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
 //                Intent intent = new Intent(LoginActivity.this, ResetPasswordActivity.class);
 //                startActivity(intent);
+                Toast.makeText(LoginActivity.this, "Need to add this", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                 loginButton.setText("Manager Login");
                 managerLink.setVisibility(View.INVISIBLE);
                 volunteerLink.setVisibility(View.VISIBLE);
-                parentDbName = MANAGER_WORD;//"managers";
+                parentDbName = MANAGER_WORD;
             }
         });
 
@@ -94,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                 loginButton.setText("Login");
                 managerLink.setVisibility(View.VISIBLE);
                 volunteerLink.setVisibility(View.INVISIBLE);
-                parentDbName = VOLUNTEER_WORD;//"volunteers";
+                parentDbName = VOLUNTEER_WORD;
             }
         });
 
@@ -104,14 +104,13 @@ public class LoginActivity extends AppCompatActivity {
         String phone = inputPhoneNumber.getText().toString();
         String password = inputPassword.getText().toString();
 
-        //If this field is empty
         if (TextUtils.isEmpty(phone)) {
             Toast.makeText(this, "Please write your phone number...", Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(password)) {
             Toast.makeText(this, "Please write your password...", Toast.LENGTH_SHORT).show();
         } else {
             loadingBar.setTitle("Login Account");
-            loadingBar.setMessage("Please wait, while we are checking the credentials.");
+            loadingBar.setMessage("Please wait, we are checking the credentials.");
             loadingBar.setCanceledOnTouchOutside(false);
             loadingBar.show();
 
@@ -122,7 +121,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void AccessGranted(final String phone, final String password) {
 
-        //If the check me box is ticked
         if(chkBoxRememberMe.isChecked()){
             Paper.book().write(Prevalent.ACCOUNT_PHONE_KEY, phone);
             Paper.book().write(Prevalent.ACCOUNT_PASSWORD_KEY, password);

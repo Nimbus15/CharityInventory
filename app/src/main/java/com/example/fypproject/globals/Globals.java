@@ -5,6 +5,7 @@ public class Globals {
     public final static String MANAGER_WORD ="MANAGER";
     public final static String INVENTORY_WORD="inventory";
     public final static String ACCOUNT_TYPE_WORD ="accountType";
+    public final static String NUM_ITEMS_IN_INVENTORY_WORD ="numItemsInInventory";
 
     //FOR SNACK BARS
     public final static String SNACKBAR_SUCCESS_WORD = "Action Successful";

@@ -186,11 +186,10 @@ public class AddItemActivity extends AppCompatActivity {
         buttonComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: UNCOMMENT THIS
-
-                // writeToDatabase();
-                // Intent itemIntent = new Intent(AddItemActivity.this, InventoryActivity.class);
-                // startActivity(itemIntent);
+                 writeToDatabase();
+                 Intent itemIntent = new Intent(AddItemActivity.this, InventoryActivity.class);
+                 startActivity(itemIntent);
+                 finish();
             }
         });
     }
@@ -283,10 +282,11 @@ public class AddItemActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     Void snapshot = task.getResult();
-                    //Log.d("TAG", "creator: " + creator);
+                    Toast.makeText(AddItemActivity.this, "Adding Item Successful", Toast.LENGTH_SHORT).show();
                     Log.d("TAG", "WORKING LETS CHILL");
                 } else {
-                    Log.d("TAG", task.getException().getMessage()); //Don't ignore potential errors!
+                    Toast.makeText(AddItemActivity.this, "Adding Item Failed", Toast.LENGTH_SHORT).show();
+                    Log.d("TAG", task.getException().getMessage());
                 }
             }
         });
@@ -326,42 +326,30 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     private void pickImageFromGallery() {
-        //Intent to pick image
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, PermissionsManager.IMAGE_PICK_CODE);
+        Toast.makeText(AddItemActivity.this, "Image-picking Successful", Toast.LENGTH_SHORT).show();
     }
-
-    //TODO: CONVERT IMAGEVIEW TO BITMAP -> FIREBASE FILE UPLOAD DOCUMENTATION
-    //SHOW PROGRESS BAR
-    //DISABLE CLICKS ON THE BUTTONS ON THE SCREEN -> NO DOUBLECLICK
-    //UPLOAD BITMAP TO THE FIREBASE STORAGE
-    //THEN I GET A URL ON SUCCESS
-    //PUT THE URL INTO THE REALTIME FIREBASE
-    //REMOVE PROGRESS BAR
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        /*  Log.d("TAG",currentPhotoPath);*/
         if (requestCode == PermissionsManager.CAMERA_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            Log.d("TAGCameraphoto", currentPhotoPath);
-
             Glide
                     .with(AddItemActivity.this)
                     .load(currentPhotoPath)
                     .centerCrop()
-                    .placeholder(R.drawable.ic_launcher_foreground)//
+                    .placeholder(R.drawable.ic_launcher_foreground)
                     .into(imageProfile);
-            choosenPhotoPath = currentPhotoPath;//
+            choosenPhotoPath = currentPhotoPath;
         } else if (requestCode == PermissionsManager.IMAGE_PICK_CODE && resultCode == RESULT_OK && data != null) {
-            Log.d("TAGGalleryphoto", String.valueOf(data.getData()));
             Glide
                     .with(AddItemActivity.this)
                     .load(data.getData())
                     .centerCrop()
-                    .placeholder(R.drawable.ic_launcher_foreground)//
+                    .placeholder(R.drawable.ic_launcher_foreground)
                     .into(imageProfile);
             choosenPhotoPath = String.valueOf(data.getData());
         }

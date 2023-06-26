@@ -1,6 +1,5 @@
 package com.example.fypproject;
 
-import static com.example.fypproject.MainActivity.numItemsInInventory;
 import static com.example.fypproject.globals.Globals.INVENTORY_WORD;
 
 import androidx.annotation.NonNull;
@@ -18,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,13 +26,8 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-
-import java.util.ArrayList;
 
 
 //TODO: Search
@@ -53,19 +46,23 @@ public class InventoryActivity extends AppCompatActivity {
     //offline?
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference().child(INVENTORY_WORD);
-
+    public static int numItemsInInventory= 0;
+    String stringFormOfNumItems;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory);
 
         addItemButton = (Button) findViewById(R.id.add_item);
-        numItemTextView = (TextView) findViewById(R.id.numItemTextView);
+        numItemTextView = (TextView) findViewById(R.id.num_item_tv);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+        numItemTextView.setText("Qty: " + stringFormOfNumItems);
+        //numItemTextView.setText("Qty: " + String.valueOf(numItemsInInventory));
+        //Toast.makeText(AddItemActivity.this, "Adding Item Successful", Toast.LENGTH_SHORT).show();
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,13 +70,13 @@ public class InventoryActivity extends AppCompatActivity {
                 startActivity(addItemIntent);
             }
         });
-        numItemTextView.setText((int) numItemsInInventory);
     }
 
 
     @Override
     protected void onStart() {
         super.onStart();
+
         //readData();
         //TODO: CONVERT THIS INTO VIEWING INSTEAD OF DELETION
         FirebaseRecyclerOptions<Item> options =
@@ -95,7 +92,7 @@ public class InventoryActivity extends AppCompatActivity {
                 holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        final int itemID = model.getID();//TODO: I Made this static
+                        final int itemID = model.getID();
 
                         CharSequence[] options = new CharSequence[]{
                                 "Yes",
@@ -127,6 +124,9 @@ public class InventoryActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
+                numItemsInInventory++;
+                stringFormOfNumItems = String.valueOf(numItemsInInventory);
+                numItemTextView.setText("Qty: " + stringFormOfNumItems);
             }
 
             @NonNull
@@ -140,6 +140,7 @@ public class InventoryActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(adapter);
         adapter.startListening();
+
     }
 
     private void deleteItem(int itemID) {
@@ -148,45 +149,8 @@ public class InventoryActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(InventoryActivity.this, "This item has been deleted successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(InventoryActivity.this, "Item deleted successfully!!", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
-
-    private ArrayList<Item> retrievedItems;
-    String idTemp;
-    Item itemCaptured;
-    //
-    private void readData(){
-        retrievedItems = new ArrayList<Item>();
-
-        myRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {//Can use query instead
-                if (task.isSuccessful()) {
-                    if(task.getResult().exists()){
-                        Toast.makeText(InventoryActivity.this, "Successfully Read", Toast.LENGTH_SHORT).show();
-                        DataSnapshot dataSnapshot = task.getResult();
-                        Log.d("TAGdataSnapshot", "onComplete: dataSnapshot " + dataSnapshot.getValue());
-
-                        for(DataSnapshot itemSnapshot: dataSnapshot.getChildren()){
-                            idTemp = String.valueOf(itemSnapshot.getKey());
-                             Log.d("TAG idTemp", String.valueOf(idTemp));
-                            itemCaptured = itemSnapshot.getValue(Item.class);
-                            Log.d("TAG itemCaptured", String.valueOf(itemCaptured));
-                            retrievedItems.add(itemCaptured);
-                        }
-                        for(Item r : retrievedItems){
-                            Log.d("TAG retrievedItems Now", r.toString());
-                        }
-                    }else{
-                        Toast.makeText(InventoryActivity.this, "Item Doesn't Exist", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(InventoryActivity.this, "Failed To Read", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
 }
