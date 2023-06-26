@@ -53,7 +53,7 @@ public class MainActivity extends PermissionsManager {
     private ActivityMainBinding binding;
 
     private Button inventoryBtn, transactionsBtn, reportsBtn, expensesBtn;
-    private Button registerUserBtn;
+    private Button backupBtn;
 
 
     @Override
@@ -91,7 +91,7 @@ public class MainActivity extends PermissionsManager {
 //        startActivityForResult(AddItemActivity);
 //        AddItemActivity.checkAllPermissions();
 
-        registerUserBtn = findViewById(R.id.registerUserBtn);
+        //backupBtn = findViewById(R.id.backupBtn);
 
         inventoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,14 +112,12 @@ public class MainActivity extends PermissionsManager {
 
 
 
-        registerUserBtn.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-//               Intent registerUserIntent = new Intent(MainActivity.this, RegisterActivity.class);
-//               startActivity(registerUserIntent);
-               populateFirestoreWithRealtimeDatabase();
-           }
-       });
+//        backupBtn.setOnClickListener(new View.OnClickListener() {
+//           @Override
+//           public void onClick(View view) {
+//               populateFirestoreWithRealtimeDatabase();
+//           }
+//       });
 
 //        reportsBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override

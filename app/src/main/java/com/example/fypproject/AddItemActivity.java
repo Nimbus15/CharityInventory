@@ -52,7 +52,7 @@ public class AddItemActivity extends AppCompatActivity {
 
     private DatabaseReference db;
     private EditText editTextName, editTextDescription, editTextQuantity, editTextBrand,
-            editTextCategory, editTextBarcode, editTextPrice, editTextNote, editTextMinQuantity;
+            editTextCategory, editTextBarcode, editTextPrice, editTextNotes, editTextMinQuantity;
     private EditText editTextApproval;
     private ImageView imageProfile;
     private Button buttonComplete, buttonCamera, buttonGallery;
@@ -98,7 +98,7 @@ public class AddItemActivity extends AppCompatActivity {
         editTextCategory = (EditText) findViewById(R.id.editTextCategory);
         editTextBarcode = (EditText) findViewById(R.id.editTextBarcode);
         editTextPrice = (EditText) findViewById(R.id.editTextPrice);
-        editTextNote = (EditText) findViewById(R.id.editTextNote1);
+        editTextNotes = (EditText) findViewById(R.id.editTextNote1);
         editTextApproval = (EditText) findViewById(R.id.editTextApproval);
         editTextMinQuantity = (EditText) findViewById(R.id.editTextMinQuantity);
         imageProfile = (ImageView) findViewById(R.id.imageProfile);
@@ -250,7 +250,7 @@ public class AddItemActivity extends AppCompatActivity {
         editTextBarcode.setText(barcode);
         editTextBrand.setText(brand);
         editTextPrice.setText(String.valueOf(price));
-        editTextNote.setText(notes);
+        editTextNotes.setText(notes);
         editTextApproval.setText(approval);
 
         if (imageFile.exists()) {
@@ -269,7 +269,7 @@ public class AddItemActivity extends AppCompatActivity {
         category = editTextCategory.getText().toString();
         barcode = editTextBarcode.getText().toString();
         price = Float.parseFloat(editTextPrice.getText().toString());
-        notes = editTextNote.getText().toString();
+        notes = editTextNotes.getText().toString();
         approval = editTextApproval.getText().toString();
     }
 

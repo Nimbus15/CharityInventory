@@ -38,7 +38,7 @@ public class ViewItemActivity extends AppCompatActivity {
 
     private DatabaseReference db;
     private EditText editTextName, editTextDescription, editTextQuantity, editTextBrand,
-            editTextCategory, editTextBarcode, editTextPrice, editTextNote, editTextMinQuantity;
+            editTextCategory, editTextBarcode, editTextPrice, editTextNotes, editTextMinQuantity;
 
     private EditText editTextApproval;
     private ImageView imageProfile;
@@ -85,7 +85,7 @@ public class ViewItemActivity extends AppCompatActivity {
         editTextCategory = (EditText) findViewById(R.id.editTextCategory);
         editTextBarcode = (EditText) findViewById(R.id.editTextBarcode);
         editTextPrice = (EditText) findViewById(R.id.editTextPrice);
-        editTextNote = (EditText) findViewById(R.id.editTextNote1);
+        editTextNotes = (EditText) findViewById(R.id.editTextNote1);
         editTextApproval = (EditText) findViewById(R.id.editTextApproval);
         editTextMinQuantity = (EditText) findViewById(R.id.editTextMinQuantity);
         imageProfile = (ImageView) findViewById(R.id.imageProfile);
@@ -118,7 +118,7 @@ public class ViewItemActivity extends AppCompatActivity {
         editTextBarcode.setText(_item.getBarcode());
         editTextBrand.setText(_item.getBrand());
         editTextPrice.setText(String.valueOf(_item.getPrice()));
-        editTextNote.setText(_item.getNotes());
+        editTextNotes.setText(_item.getNotes());
         editTextApproval.setText(_item.getApproved());
     }
 
@@ -135,10 +135,17 @@ public class ViewItemActivity extends AppCompatActivity {
         approval = editTextApproval.getText().toString();
         barcode = editTextBarcode.getText().toString();
         brand = editTextBrand.getText().toString();
+        category = editTextCategory.getText().toString();
         description = editTextDescription.getText().toString();
 
-    }
 
+
+        minQuantity = Integer.parseInt(editTextMinQuantity.getText().toString());
+        name = editTextName.getText().toString();
+        notes = editTextNotes.getText().toString();
+        price = Float.parseFloat(editTextPrice.getText().toString());
+        quantity = Integer.parseInt(String.valueOf(editTextQuantity.getText()));
+    }
 
     private void updateDetailsInDatabase() {
         getTextFromField();
@@ -151,7 +158,16 @@ public class ViewItemActivity extends AppCompatActivity {
         changes.put("approved", approval);
         changes.put("barcode",  barcode);
         changes.put("brand", brand);
+        changes.put("category", category);
         changes.put("desc", description);
+
+
+
+        changes.put("minQuantity", minQuantity);
+        changes.put("name", name);
+        changes.put("notes",notes);
+        changes.put("price", price);
+        changes.put("quantity", quantity);
 
 
         // Update the record
