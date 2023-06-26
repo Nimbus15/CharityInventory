@@ -67,7 +67,7 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
 
     private TextView nameTextView;
     private ImageView userImageView;
-    protected static long numItemsInInventory;//hack
+    protected static long numItemsInInventory;//hack//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
