@@ -1,6 +1,7 @@
 package com.example.fypproject;
 
 import static com.example.fypproject.globals.Globals.INVENTORY_WORD;
+import static com.example.fypproject.ReportsActivity.numItemsInInventory;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,7 +47,7 @@ public class InventoryActivity extends AppCompatActivity {
     //offline?
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference().child(INVENTORY_WORD);
-    public static int numItemsInInventory= 0;
+
     String stringFormOfNumItems;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +73,16 @@ public class InventoryActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        //numItemsInInventory= 0;
+    }
 
     @Override
     protected void onStart() {
         super.onStart();
+        numItemsInInventory= 0;
 
         //readData();
         //TODO: CONVERT THIS INTO VIEWING INSTEAD OF DELETION

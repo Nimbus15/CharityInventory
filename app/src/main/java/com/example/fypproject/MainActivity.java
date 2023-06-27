@@ -103,8 +103,9 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
 
 
         checkAllPermissions();
-        inventoryBtn = findViewById(R.id.inventory_button);// change name
-        transactionsBtn = findViewById(R.id.transactions_button);// change name
+        inventoryBtn = findViewById(R.id.inventory_button);//change names?
+        transactionsBtn = findViewById(R.id.transactions_button);
+        reportsBtn = findViewById(R.id.reports_button);
 
 
         View headerView = navigationView.getHeaderView(0);
@@ -139,13 +140,13 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
 //           }
 //       });
 
-//        reportsBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent reportsIntent = new Intent(MainActivity.this, TransactionActivity.class);
-//                startActivity(reportsIntent);
-//            }
-//        });
+        reportsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent reportsIntent = new Intent(MainActivity.this, ReportsActivity.class);
+                startActivity(reportsIntent);
+            }
+        });
         if(typeOfAccount.equals("VOLUNTEER") || typeOfAccount.equals("MANAGER")){
             nameTextView.setText(Prevalent.currentOnlineUser.getName());
             Picasso.get()
