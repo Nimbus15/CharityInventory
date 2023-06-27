@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HelpActivity">
+
+
+    <TextView
+        android:id="@+id/help_page_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="154dp"
+        android:layout_marginTop="55dp"
+        android:text="Help Page"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/inventory_help_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="The inventory page is where you can see a list of all the items in the charity shop inventory"
+        app:layout_constraintEnd_toEndOf="@+id/reports_help_tv"
+        app:layout_constraintStart_toStartOf="@+id/reports_help_tv"
+        app:layout_constraintTop_toBottomOf="@+id/help_page_title_tv" />
+
+    <TextView
+        android:id="@+id/reports_help_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="88dp"
+        android:layout_marginBottom="84dp"
+        android:text="The report page provides a breakdown of key statistic in your account"
+        app:layout_constraintBottom_toTopOf="@+id/transaction_help_tv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/inventory_help_tv" />
+
+    <TextView
+        android:id="@+id/transaction_help_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="51dp"
+        android:layout_marginTop="291dp"
+        android:text="The transaction page provides a list of actions taken on an item"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

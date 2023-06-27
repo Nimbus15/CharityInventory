@@ -43,7 +43,7 @@
         app:layout_constraintVertical_bias="0.355" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/expenses_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Expenses"
@@ -68,7 +68,7 @@
         app:layout_constraintVertical_bias="0.485" />
 
     <TextView
-        android:id="@+id/text_view2"
+        android:id="@+id/main_page_title_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Main Page"
@@ -81,7 +81,7 @@
         app:layout_constraintVertical_bias="0.05" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/settings_button"
         android:layout_width="124dp"
         android:layout_height="73dp"
         android:layout_marginStart="12dp"

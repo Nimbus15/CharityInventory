@@ -61,7 +61,8 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
 
-    private Button inventoryBtn, transactionsBtn, reportsBtn, expensesBtn;
+    private Button inventoryBtn, transactionsBtn, reportsBtn,
+            helpBtn, settingBtn, expensesBtn;
     private Button backupBtn;
 
     private String typeOfAccount;
@@ -106,6 +107,7 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
         inventoryBtn = findViewById(R.id.inventory_button);//change names?
         transactionsBtn = findViewById(R.id.transactions_button);
         reportsBtn = findViewById(R.id.reports_button);
+        helpBtn = findViewById(R.id.help_button);
 
 
         View headerView = navigationView.getHeaderView(0);
@@ -130,6 +132,14 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
             public void onClick(View view) {
                 Intent transactionsIntent = new Intent(MainActivity.this, TransactionActivity.class);
                 startActivity(transactionsIntent);
+            }
+        });
+
+        helpBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent helpIntent = new Intent(MainActivity.this, HelpActivity.class);
+                startActivity(helpIntent);
             }
         });
 

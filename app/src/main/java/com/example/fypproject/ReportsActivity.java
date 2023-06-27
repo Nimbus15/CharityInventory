@@ -21,4 +21,10 @@ public class ReportsActivity extends AppCompatActivity {
 
         qty_tv.setText(String.valueOf("Qty: " +numItemsInInventory));
     }
+
+    @Override
+    protected void onDestroy() {//TODO: HERE
+        super.onDestroy();
+        finish();
+    }
 }
