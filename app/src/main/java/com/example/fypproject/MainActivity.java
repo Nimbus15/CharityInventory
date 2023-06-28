@@ -2,7 +2,6 @@ package com.example.fypproject;
 
 import static com.example.fypproject.globals.Globals.ACCOUNT_TYPE_WORD;
 import static com.example.fypproject.globals.Globals.INVENTORY_WORD;
-import static com.example.fypproject.globals.Globals.NUM_ITEMS_IN_INVENTORY_WORD;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -62,7 +61,7 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
     private ActivityMainBinding binding;
 
     private Button inventoryBtn, transactionsBtn, reportsBtn,
-            helpBtn, settingBtn, expensesBtn;
+            helpBtn, settingsBtn, expensesBtn;
     private Button backupBtn;
 
     private String typeOfAccount;
@@ -108,6 +107,7 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
         transactionsBtn = findViewById(R.id.transactions_button);
         reportsBtn = findViewById(R.id.reports_button);
         helpBtn = findViewById(R.id.help_button);
+        settingsBtn = findViewById(R.id.settings_button);
 
 
         View headerView = navigationView.getHeaderView(0);
@@ -142,6 +142,15 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
                 startActivity(helpIntent);
             }
         });
+
+        settingsBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(settingsIntent);
+            }
+        });
+
 
 //        backupBtn.setOnClickListener(new View.OnClickListener() {
 //           @Override
