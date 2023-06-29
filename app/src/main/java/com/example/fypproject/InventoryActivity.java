@@ -1,7 +1,6 @@
 package com.example.fypproject;
 
 import static com.example.fypproject.globals.Globals.INVENTORY_WORD;
-import static com.example.fypproject.ReportsActivity.numItemsInInventory;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,57 +12,67 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fypproject.models.Item;
 import com.example.fypproject.viewholders.ItemViewHolder;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
-//TODO: Search
-//Filter?
-//Ordering AZ
-//New folder
-//Copy
-//Qty:4
 public class InventoryActivity extends AppCompatActivity {
 
-    private Button addItemButton;
+    private Button addItemButton, filterButton, executeButton, sortButton, copyButton;
     private TextView numItemTextView;
+    private EditText filterBar;
     private RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
 
-    //offline?
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference().child(INVENTORY_WORD);
 
-    String stringFormOfNumItems;
+    public static int numOfItemInInventory =0;
+    //stringFormOfNumItems
+    List<Item> dataListCopy = new ArrayList<>();
+    InventoryActivity.InventoryAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory);
 
         addItemButton = (Button) findViewById(R.id.add_item);
+        filterButton = (Button) findViewById(R.id.filter_button);
+        sortButton = (Button) findViewById(R.id.sort_button);
+        copyButton = (Button) findViewById(R.id.copy_button);
+
+        filterBar = (EditText) findViewById(R.id.filter_bar);
+        executeButton= (Button) findViewById(R.id.execute_button);
+
         numItemTextView = (TextView) findViewById(R.id.num_item_tv);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        numItemTextView.setText("Qty: " + stringFormOfNumItems);
-        //numItemTextView.setText("Qty: " + String.valueOf(numItemsInInventory));
-        //Toast.makeText(AddItemActivity.this, "Adding Item Successful", Toast.LENGTH_SHORT).show();
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,82 +80,108 @@ public class InventoryActivity extends AppCompatActivity {
                 startActivity(addItemIntent);
             }
         });
+
+
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                filterBar.setVisibility(View.VISIBLE);
+                executeButton.setVisibility(View.VISIBLE);
+            }
+        });
+
+        executeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(AddItemActivity.this, "Adding Item Successful", Toast.LENGTH_SHORT).show();
+                String filterTerm = String.valueOf(filterBar.getText());
+                if(!filterTerm.equals("")){
+                    filterItemsBasedOnName(filterTerm);
+                }
+            }
+        });
+
+        filterBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(editable != null && editable.length() > 0) {
+
+                }else{
+                    adapter.setItemList(dataListCopy);
+                }
+            }
+        });
+
+        adapter = new InventoryAdapter();
+        recyclerView.setAdapter(adapter);
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                dataListCopy.clear();
+                for(DataSnapshot newDataSnapshot : snapshot.getChildren()){
+                    Item item = newDataSnapshot.getValue(Item.class);
+                    dataListCopy.add(item);
+                }
+                adapter.setItemList(dataListCopy);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+//        sortButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
+
+//        copy_button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
+        numItemTextView.setText("Qty: " + String.valueOf(adapter.getItemCount()));
+        numOfItemInInventory = adapter.getItemCount();
+
     }
 
+
+    private List<Item> filteredList = new ArrayList<>();
+
+    private void filterItemsBasedOnName(String name){
+        List<Item> filteredList = dataListCopy.stream().filter(item -> item.getName().toUpperCase(Locale.ENGLISH).equals(name.toUpperCase(Locale.ENGLISH))).collect(Collectors.toList());
+        adapter.setItemList(filteredList);
+        Log.d("filterItemsBasedOnName", "filterItemsBasedOnName called: ");
+    }
     @Override
     protected void onRestart() {
         super.onRestart();
-        //numItemsInInventory= 0;
     }
+
 
     @Override
     protected void onStart() {
         super.onStart();
-        numItemsInInventory= 0;
 
-        //readData();
-        //TODO: CONVERT THIS INTO VIEWING INSTEAD OF DELETION
-        FirebaseRecyclerOptions<Item> options =
-                new FirebaseRecyclerOptions.Builder<Item>()
-                        .setQuery(myRef, Item.class)//null?
-                        .build();
-        FirebaseRecyclerAdapter<Item, ItemViewHolder> adapter = new FirebaseRecyclerAdapter<Item, ItemViewHolder>(options) {
-            @Override
-            protected void onBindViewHolder(@NonNull ItemViewHolder holder, int position, @NonNull Item model) {
-                holder.itemIcon.setImageURI(Uri.parse(model.getImage()));
-                holder.textViewItemName.setText(model.getName());
-                Log.d("tagonBindViewHolder", "onBindViewHolder: 0");
-                holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        final int itemID = model.getID();
-
-                        CharSequence[] options = new CharSequence[]{
-                                "Yes",
-                                "No"
-                        };
-                        AlertDialog.Builder builder = new AlertDialog.Builder(InventoryActivity.this);
-                        builder.setTitle("Do you want to delete this product. Are you sure?");
-                        builder.setItems(options, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if(which == 0){
-                                    deleteItem(itemID);
-                                    //deleteTransactionAssociated(itemID);
-                                    Log.d("TAGonClick0", "onClick: 0");
-                                }
-                                if(which == 1){
-                                    Log.d("TAGonClick1", "onClick: 1");
-                                }
-                            }
-                        });
-                        builder.show();
-                    }
-                });
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(InventoryActivity.this,ViewItemActivity.class);
-                        intent.putExtra(ViewItemActivity.EXTRA_ITEM,model);
-                        startActivity(intent);
-                    }
-                });
-                numItemsInInventory++;
-                stringFormOfNumItems = String.valueOf(numItemsInInventory);
-                numItemTextView.setText("Qty: " + stringFormOfNumItems);
-            }
-
-            @NonNull
-            @Override
-            public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row, parent, false);
-                ItemViewHolder holder = new ItemViewHolder(view);
-                return holder;
-            }
-        };
-
-        recyclerView.setAdapter(adapter);
-        adapter.startListening();
+//        FirebaseRecyclerOptions<Item> options =
+//                new FirebaseRecyclerOptions.Builder<Item>()
+//                        .setQuery(myRef, Item.class)
+//                        .build();
 
     }
 
@@ -160,4 +195,84 @@ public class InventoryActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    @Override
+    protected void onPause() {
+        filterBar.setVisibility(View.INVISIBLE);
+        executeButton.setVisibility(View.INVISIBLE);
+        super.onPause();
+    }
+
+    class InventoryAdapter extends RecyclerView.Adapter<ItemViewHolder> {
+        private List<Item> itemList;
+        public void setItemList(List<Item> itemList) {
+            this.itemList = itemList;
+            notifyDataSetChanged();
+            numOfItemInInventory = getItemCount();
+        }
+
+        @NonNull
+        @Override
+        public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row, parent, false);
+            ItemViewHolder holder = new ItemViewHolder(view);
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
+            Item model = itemList.get(position);
+            if(itemList.get(holder.getAbsoluteAdapterPosition()).getImage() != null
+            ){
+                holder.itemIcon.setImageURI(Uri.parse(itemList.get(holder.getAbsoluteAdapterPosition()).getImage()));
+            }
+            holder.textViewItemName.setText(itemList.get(holder.getAbsoluteAdapterPosition()).getName());
+            Log.d("tagonBindViewHolder", "onBindViewHolder: 0");
+            holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final int itemID = itemList.get(holder.getAbsoluteAdapterPosition()).getID();
+                    CharSequence[] options = new CharSequence[]{
+                            "Yes",
+                            "No"
+                    };
+                    AlertDialog.Builder builder = new AlertDialog.Builder(InventoryActivity.this);
+                    builder.setTitle("Do you want to delete this product. Are you sure?");
+                    builder.setItems(options, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if(which == 0){
+                                deleteItem(itemID);
+                                //deleteTransactionAssociated(itemID);
+                                Log.d("TAGonClick0", "onClick: 0");
+                            }
+                            if(which == 1){
+                                Log.d("TAGonClick1", "onClick: 1");
+                            }
+                        }
+                    });
+                    builder.show();
+                }
+            });
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(InventoryActivity.this,ViewItemActivity.class);
+                    intent.putExtra(ViewItemActivity.EXTRA_ITEM, itemList.get(holder.getAbsoluteAdapterPosition()));
+                    startActivity(intent);
+                }
+            });
+            numItemTextView.setText("Qty: " + getItemCount());
+
+        }
+
+        @Override
+        public int getItemCount() {
+            if(itemList == null)
+                return 0;
+            return itemList.size();
+        }
+    }
+
 }
+

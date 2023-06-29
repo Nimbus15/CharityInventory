@@ -1,6 +1,7 @@
 package com.example.fypproject;
 
 
+import static com.example.fypproject.InventoryActivity.numOfItemInInventory;
 import static com.example.fypproject.globals.Globals.INVENTORY_WORD;
 
 import androidx.activity.result.ActivityResult;
@@ -51,6 +52,7 @@ import java.util.Locale;
 public class AddItemActivity extends AppCompatActivity {
 
     private DatabaseReference db;
+
     private EditText editTextName, editTextDescription, editTextQuantity, editTextBrand,
             editTextCategory, editTextBarcode, editTextPrice, editTextNotes, editTextMinQuantity;
     private EditText editTextApproval;
@@ -114,6 +116,7 @@ public class AddItemActivity extends AppCompatActivity {
 
 
         //setVariablesWithNulls();
+        ID = numOfItemInInventory;
         setVariablesWithTestData();
 
         //Add Camera Activity?
@@ -275,6 +278,7 @@ public class AddItemActivity extends AppCompatActivity {
     private String choosenPhotoPath;
     private void writeToDatabase() {
         getTextFromFields();
+        ID = numOfItemInInventory++;
         Item item2 = new Item(ID, name, description, category, quantity,
                 minQuantity, brand, barcode, choosenPhotoPath, notes, price, approval);
         db.child(INVENTORY_WORD).child(String.valueOf(ID)).setValue(item2).addOnCompleteListener(new OnCompleteListener<Void>() {

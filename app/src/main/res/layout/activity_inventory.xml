@@ -7,7 +7,7 @@
     android:orientation="horizontal">
 
     <Button
-        android:id="@+id/button14"
+        android:id="@+id/filter_button"
         android:layout_width="0dp"
         android:layout_height="51dp"
         android:layout_marginStart="140dp"
@@ -15,32 +15,35 @@
         android:layout_marginEnd="18dp"
         android:layout_weight="1"
         android:text="FILTER"
-        app:layout_constraintEnd_toStartOf="@+id/button15"
+        app:layout_constraintEnd_toStartOf="@+id/sort_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button15"
+        android:id="@+id/sort_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="19dp"
         android:layout_marginEnd="52dp"
         android:text="AZ"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/button14"
+        app:layout_constraintStart_toEndOf="@+id/filter_button"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView16"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="138dp"
+        android:layout_height="76dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="78dp"
-        android:layout_marginBottom="28dp"
-        android:text="Inventory"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        android:text="Inventory Page"
+        android:textSize="30dp"
         app:layout_constraintBottom_toTopOf="@+id/recyclerView"
-        app:layout_constraintStart_toStartOf="@+id/button14"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/filter_button"
+        app:layout_constraintHorizontal_bias="0.533"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.32" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -67,7 +70,7 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <Button
-        android:id="@+id/button17"
+        android:id="@+id/copy_button"
         android:layout_width="79dp"
         android:layout_height="43dp"
         android:layout_marginStart="255dp"
@@ -86,7 +89,7 @@
         android:text="Add New"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/button17"
+        app:layout_constraintStart_toEndOf="@+id/copy_button"
         app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
 
     <TextView
@@ -100,6 +103,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.851" />
+
+    <EditText
+        android:id="@+id/filter_bar"
+        android:layout_width="244dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="72dp"
+        android:ems="10"
+        android:hint="Filter Item Name? "
+        android:inputType="textPersonName"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.7"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/execute_button"
+        android:layout_width="49dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="72dp"
+        android:layout_marginBottom="10dp"
+        android:text="GO"
+        android:textSize="10sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/filter_bar"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
