@@ -34,6 +34,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -142,12 +144,12 @@ public class InventoryActivity extends AppCompatActivity {
         });
 
 
-//        sortButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
+        sortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sortItemsBasedOnName();
+            }
+        });
 
 //        copy_button.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -168,6 +170,32 @@ public class InventoryActivity extends AppCompatActivity {
         adapter.setItemList(filteredList);
         Log.d("filterItemsBasedOnName", "filterItemsBasedOnName called: ");
     }
+
+    boolean sortFromAtoZ = true;
+    private void sortItemsBasedOnName(){
+        List<Item> sortedList = new ArrayList<>();
+        sortedList.addAll(dataListCopy);
+        sortFromAtoZ = !sortFromAtoZ;
+        //sortedList.sort();
+        if(sortFromAtoZ)
+            Collections.sort(sortedList, highComparator);
+        else
+            Collections.sort(sortedList, lowComparator);
+        adapter.setItemList(sortedList);
+    }
+    Comparator<Item> highComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item item1, Item item2) {
+            return item1.getName().compareToIgnoreCase(item2.getName());
+        }
+    };
+
+    Comparator<Item> lowComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item item1, Item item2) {
+            return item2.getName().compareToIgnoreCase(item1.getName());
+        }
+    };
     @Override
     protected void onRestart() {
         super.onRestart();
