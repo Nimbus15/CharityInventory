@@ -41,7 +41,8 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class InventoryActivity extends AppCompatActivity {
-
+    public static final String COPY_WORD= "Copy_It";
+    public static final String ITEM_WORD= "Copy_Item";
     private Button addItemButton, filterButton, executeButton, sortButton, copyButton;
     private TextView numItemTextView;
     private EditText filterBar;
@@ -74,6 +75,9 @@ public class InventoryActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
+        if(dataListCopy != null && dataListCopy.size() > 0)
+            selectedItemDetailsToCopy = dataListCopy.get(0);
 
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,12 +155,18 @@ public class InventoryActivity extends AppCompatActivity {
             }
         });
 
-//        copy_button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
+        copyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(selectedItemDetailsToCopy == null && dataListCopy.size() >0)
+                    selectedItemDetailsToCopy = dataListCopy.get(0);
+                Intent copyIntent = new Intent(InventoryActivity.this, AddItemActivity.class);
+                copyIntent.putExtra(COPY_WORD, "COPY");
+                copyIntent.putExtra(ITEM_WORD,  selectedItemDetailsToCopy);
+                startActivity(copyIntent);
+            }
+        });
+
         numItemTextView.setText("Qty: " + String.valueOf(adapter.getItemCount()));
         numOfItemInInventory = adapter.getItemCount();
 
@@ -231,6 +241,7 @@ public class InventoryActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    Item selectedItemDetailsToCopy;
     class InventoryAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         private List<Item> itemList;
         public void setItemList(List<Item> itemList) {
@@ -285,6 +296,7 @@ public class InventoryActivity extends AppCompatActivity {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    selectedItemDetailsToCopy = itemList.get(holder.getAbsoluteAdapterPosition());
                     Intent intent = new Intent(InventoryActivity.this,ViewItemActivity.class);
                     intent.putExtra(ViewItemActivity.EXTRA_ITEM, itemList.get(holder.getAbsoluteAdapterPosition()));
                     startActivity(intent);

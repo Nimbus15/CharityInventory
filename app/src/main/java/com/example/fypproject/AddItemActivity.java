@@ -1,6 +1,8 @@
 package com.example.fypproject;
 
 
+import static com.example.fypproject.InventoryActivity.COPY_WORD;
+import static com.example.fypproject.InventoryActivity.ITEM_WORD;
 import static com.example.fypproject.InventoryActivity.numOfItemInInventory;
 import static com.example.fypproject.globals.Globals.INVENTORY_WORD;
 
@@ -117,7 +119,6 @@ public class AddItemActivity extends AppCompatActivity {
 
         //setVariablesWithNulls();
         ID = numOfItemInInventory;
-        setVariablesWithTestData();
 
         //Add Camera Activity?
         buttonCamera.setOnClickListener(new View.OnClickListener() {
@@ -195,6 +196,15 @@ public class AddItemActivity extends AppCompatActivity {
                  finish();
             }
         });
+
+        Intent intent = getIntent();
+        String copyCommand = intent.getStringExtra(COPY_WORD);
+        Item copyItem  = (Item) intent.getSerializableExtra(ITEM_WORD);
+        if(copyCommand != null || !copyCommand.equals("")){
+            copyExistingItem(copyItem);
+        } else{
+            setVariablesWithTestData();
+        }
     }
 
     int ID;
@@ -273,6 +283,27 @@ public class AddItemActivity extends AppCompatActivity {
         price = Float.parseFloat(editTextPrice.getText().toString());
         notes = editTextNotes.getText().toString();
         approval = editTextApproval.getText().toString();
+    }
+
+    private void copyExistingItem(Item _item) {
+        editTextName.setText(_item.getName());
+        editTextDescription.setText(_item.getDesc());
+        editTextQuantity.setText(String.valueOf(_item.getQuantity()));
+        editTextMinQuantity.setText(String.valueOf(_item.getMinQuantity()));
+        editTextBrand.setText(_item.getBrand());
+
+
+
+        editTextCategory.setText(_item.getCategory());
+        editTextBarcode.setText(_item.getBarcode());
+        editTextBrand.setText(_item.getBrand());
+        editTextPrice.setText(String.valueOf(_item.getPrice()));
+        editTextNotes.setText(_item.getNotes());
+        editTextApproval.setText(_item.getApproved());
+
+        //Change the variables
+        ID = _item.getID();
+        getTextFromFields();
     }
 
     private String choosenPhotoPath;

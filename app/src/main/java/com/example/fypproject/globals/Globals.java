@@ -7,6 +7,7 @@ public class Globals {
     public final static String ACCOUNT_TYPE_WORD ="accountType";
     public final static String NUM_ITEMS_IN_INVENTORY_WORD ="numItemsInInventory";
 
+
     //FOR SNACK BARS
     public final static String SNACKBAR_SUCCESS_WORD = "Action Successful";
     public final static String SNACKBAR_FAILED_WORD = "Action Failed";
@@ -17,4 +18,5 @@ public class Globals {
     //FOR DEBUG
     public final static String TAG_ISWORKING_WORD = "ISWORKING";
     public final static String TAG_MYTAG_WORD = "MYTAG";
+
 }

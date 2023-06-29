@@ -114,6 +114,9 @@ public class ViewItemActivity extends AppCompatActivity {
         editTextQuantity.setText(String.valueOf(_item.getQuantity()));
         editTextMinQuantity.setText(String.valueOf(_item.getMinQuantity()));
         editTextBrand.setText(_item.getBrand());
+
+
+
         editTextCategory.setText(_item.getCategory());
         editTextBarcode.setText(_item.getBarcode());
         editTextBrand.setText(_item.getBrand());
