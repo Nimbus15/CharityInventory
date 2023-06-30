@@ -65,7 +65,7 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
     private Button backupBtn;
 
     private String typeOfAccount;
-
+    public static String accountTypeInMain;
     private TextView nameTextView;
     private ImageView userImageView;
     //private int numItemsInInventory=0;
@@ -75,6 +75,7 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
 
         Intent intent = getIntent();
         typeOfAccount = intent.getStringExtra(ACCOUNT_TYPE_WORD);
+        accountTypeInMain = typeOfAccount;
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

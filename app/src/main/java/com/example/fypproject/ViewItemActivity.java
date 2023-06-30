@@ -70,6 +70,22 @@ public class ViewItemActivity extends AppCompatActivity {
         }
     }
 
+    public void decodeABarcode() {
+        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+        try {
+            BitMatrix bitMatrix = multiFormatWriter.encode(editTextName.getText().toString(), BarcodeFormat.CODE_128, editTextName.getWidth(), editTextName.getHeight());
+            Bitmap bitmap = Bitmap.createBitmap(editTextName.getWidth(), editTextName.getHeight(), Bitmap.Config.RGB_565);
+            for (int i = 0; i < editTextName.getWidth(); i++) {
+                for (int j = 0; j < editTextName.getHeight(); j++) {
+                    bitmap.setPixel(i, j, bitMatrix.get(i, j) ? Color.BLACK : Color.WHITE);
+                }
+            }
+            imageProfile.setImageBitmap(bitmap);//heretest
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
+    }
+
     Item item;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +122,8 @@ public class ViewItemActivity extends AppCompatActivity {
                 Snackbar.make(view ,"buttonComplete was clicked", Snackbar.LENGTH_SHORT).show();
             }
         });
+
+        editTextApproval.setEnabled(!MainActivity.accountTypeInMain.equals("VOLUNTEER"));
     }
 
     private void populateFromItem(Item _item) {
@@ -189,5 +207,17 @@ public class ViewItemActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Data update failed", Toast.LENGTH_SHORT).show();
                 }
             });
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        editTextApproval.setEnabled(!MainActivity.accountTypeInMain.equals("VOLUNTEER"));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        editTextApproval.setEnabled(!MainActivity.accountTypeInMain.equals("VOLUNTEER"));
     }
 }

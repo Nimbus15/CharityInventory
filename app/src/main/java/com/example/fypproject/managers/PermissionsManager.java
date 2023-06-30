@@ -1,5 +1,6 @@
 package com.example.fypproject.managers;
 
+import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -21,6 +22,7 @@ public abstract class PermissionsManager extends AppCompatActivity {
     public static final int NETWORK_CODE = 103;
     public static final int CAMERA_PERMISSION_CODE = 100;//?
     public static final int CAMERA_REQUEST_CODE = 2000;
+    public static final int SMS_REQUEST_CODE = 3000;
 
 
 
@@ -32,6 +34,7 @@ public abstract class PermissionsManager extends AppCompatActivity {
 
 //        checkPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
         checkPermission(android.Manifest.permission.CAMERA, CAMERA_PERMISSION_CODE);
+        checkPermission(Manifest.permission.SEND_SMS, SMS_REQUEST_CODE);
     }
 
     // Function to check and request permission.
@@ -87,6 +90,15 @@ public abstract class PermissionsManager extends AppCompatActivity {
                 Toast.makeText(PermissionsManager.this, "Network Permission Granted", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(PermissionsManager.this, "Network Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == SMS_REQUEST_CODE) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, send the SMS
+                Toast.makeText(PermissionsManager.this, "SMS permission Granted", Toast.LENGTH_SHORT).show();
+            } else {
+                // Permission denied
+                Toast.makeText(PermissionsManager.this, "SMS permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
     }

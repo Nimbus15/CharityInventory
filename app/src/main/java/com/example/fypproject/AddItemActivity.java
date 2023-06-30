@@ -5,6 +5,7 @@ import static com.example.fypproject.InventoryActivity.COPY_WORD;
 import static com.example.fypproject.InventoryActivity.ITEM_WORD;
 import static com.example.fypproject.InventoryActivity.numOfItemInInventory;
 import static com.example.fypproject.globals.Globals.INVENTORY_WORD;
+import static com.example.fypproject.globals.Globals.MANAGER_WORD;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -23,6 +24,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -33,11 +35,15 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.fypproject.managers.PermissionsManager;
+import com.example.fypproject.models.Account;
 import com.example.fypproject.models.Item;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -116,7 +122,7 @@ public class AddItemActivity extends AppCompatActivity {
 
         buttonBarcode = findViewById(R.id.buttonBarcode);
 
-
+        editTextApproval.setEnabled(!MainActivity.accountTypeInMain.equals("VOLUNTEER"));
         //setVariablesWithNulls();
         ID = numOfItemInInventory;
 
@@ -200,7 +206,7 @@ public class AddItemActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String copyCommand = intent.getStringExtra(COPY_WORD);
         Item copyItem  = (Item) intent.getSerializableExtra(ITEM_WORD);
-        if(copyCommand != null || !copyCommand.equals("")){
+        if(copyCommand != null){
             copyExistingItem(copyItem);
         } else{
             setVariablesWithTestData();
@@ -282,6 +288,7 @@ public class AddItemActivity extends AppCompatActivity {
         barcode = editTextBarcode.getText().toString();
         price = Float.parseFloat(editTextPrice.getText().toString());
         notes = editTextNotes.getText().toString();
+
         approval = editTextApproval.getText().toString();
     }
 
@@ -319,6 +326,7 @@ public class AddItemActivity extends AppCompatActivity {
                     Void snapshot = task.getResult();
                     Toast.makeText(AddItemActivity.this, "Adding Item Successful", Toast.LENGTH_SHORT).show();
                     Log.d("TAG", "WORKING LETS CHILL");
+                    sendAApprovalRequest();
                 } else {
                     Toast.makeText(AddItemActivity.this, "Adding Item Failed", Toast.LENGTH_SHORT).show();
                     Log.d("TAG", task.getException().getMessage());
@@ -388,5 +396,58 @@ public class AddItemActivity extends AppCompatActivity {
                     .into(imageProfile);
             choosenPhotoPath = String.valueOf(data.getData());
         }
+    }
+
+    private String approvalRequestMsg;
+    private void sendAApprovalRequest(){
+        approvalRequestMsg= "A new item has been added, " +
+                "please approve the item";
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference rootDf = db.getReference();
+        DatabaseReference managersDf = rootDf.child(MANAGER_WORD);
+        managersDf.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for(DataSnapshot subDataSnapshot :  snapshot.getChildren()){
+                        Account accountRetrieved = subDataSnapshot.getValue(Account.class);
+                        sendSMS(accountRetrieved.getPhone(), approvalRequestMsg);
+                    }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void sendSMS( String phoneNumber,  String message) {
+//        String phoneNumberTemp = "+353894238159";
+//        String messageTemp = "Hello, this is a test message.";
+
+        String phoneNumberConcatenated = "+" + phoneNumber;
+
+        try {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(phoneNumberConcatenated, null, message, null, null);
+            Toast.makeText(this, "SMS sent successfully.", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "SMS sending failed.", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        editTextApproval.setEnabled(!MainActivity.accountTypeInMain.equals("VOLUNTEER"));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        editTextApproval.setEnabled(!MainActivity.accountTypeInMain.equals("VOLUNTEER"));
     }
 }

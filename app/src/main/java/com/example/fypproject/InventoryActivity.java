@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fypproject.globals.Globals;
 import com.example.fypproject.models.Item;
 import com.example.fypproject.viewholders.ItemViewHolder;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -43,6 +44,7 @@ import java.util.stream.Collectors;
 public class InventoryActivity extends AppCompatActivity {
     public static final String COPY_WORD= "Copy_It";
     public static final String ITEM_WORD= "Copy_Item";
+
     private Button addItemButton, filterButton, executeButton, sortButton, copyButton;
     private TextView numItemTextView;
     private EditText filterBar;
@@ -161,6 +163,7 @@ public class InventoryActivity extends AppCompatActivity {
                 if(selectedItemDetailsToCopy == null && dataListCopy.size() >0)
                     selectedItemDetailsToCopy = dataListCopy.get(0);
                 Intent copyIntent = new Intent(InventoryActivity.this, AddItemActivity.class);
+
                 copyIntent.putExtra(COPY_WORD, "COPY");
                 copyIntent.putExtra(ITEM_WORD,  selectedItemDetailsToCopy);
                 startActivity(copyIntent);
