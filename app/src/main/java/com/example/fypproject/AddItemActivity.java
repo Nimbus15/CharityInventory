@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 
 import android.content.Intent;
@@ -30,6 +31,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +47,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -73,6 +78,7 @@ public class AddItemActivity extends AppCompatActivity {
 
     private TextView textViewResponse;
     private ActivityResultLauncher<Intent> barcodeActivityLauncher;
+    private ProgressBar progressBar;
 
     //threads
     //===
@@ -203,6 +209,8 @@ public class AddItemActivity extends AppCompatActivity {
             }
         });
 
+        progressBar = findViewById(R.id.progressBar);
+
         Intent intent = getIntent();
         String copyCommand = intent.getStringExtra(COPY_WORD);
         Item copyItem  = (Item) intent.getSerializableExtra(ITEM_WORD);
@@ -211,6 +219,7 @@ public class AddItemActivity extends AppCompatActivity {
         } else{
             setVariablesWithTestData();
         }
+
     }
 
     int ID;
@@ -313,21 +322,30 @@ public class AddItemActivity extends AppCompatActivity {
         getTextFromFields();
     }
 
+//    private void manageImages(){
+//        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+//    }
+
     private String choosenPhotoPath;
     private void writeToDatabase() {
         getTextFromFields();
         ID = numOfItemInInventory++;
         Item item2 = new Item(ID, name, description, category, quantity,
                 minQuantity, brand, barcode, choosenPhotoPath, notes, price, approval);
+        //progressBar.setVisibility(View.VISIBLE);
+
+        
         db.child(INVENTORY_WORD).child(String.valueOf(ID)).setValue(item2).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
+                    progressBar.setVisibility(View.GONE);
                     Void snapshot = task.getResult();
                     Toast.makeText(AddItemActivity.this, "Adding Item Successful", Toast.LENGTH_SHORT).show();
                     Log.d("TAG", "WORKING LETS CHILL");
                     sendAApprovalRequest();
                 } else {
+                    progressBar.setVisibility(View.GONE);
                     Toast.makeText(AddItemActivity.this, "Adding Item Failed", Toast.LENGTH_SHORT).show();
                     Log.d("TAG", task.getException().getMessage());
                 }

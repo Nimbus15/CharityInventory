@@ -180,9 +180,6 @@ public class RegisterActivity extends FragmentActivity {
         DatabaseReference childRef = rootRef.child(typeOfAccount);
 
 
-        //TODO: [ROOT]//{ACCOUNTYPE}
-        //TODO: ADD ACCOUNT TYPE
-
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             //This happens if the data in the field is modified
             @Override
