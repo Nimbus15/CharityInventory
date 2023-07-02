@@ -22,4 +22,13 @@
     <style name="Theme.FYPProject.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.FYPProject.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+<!--    &lt;!&ndash; Base application theme. &ndash;&gt;-->
+<!--    <style name="Base.Theme.FYPProject" parent="Theme.Material3.DayNight">-->
+<!--        &lt;!&ndash; Customize your light theme here. &ndash;&gt;-->
+<!--        &lt;!&ndash; <item name="colorPrimary">@color/my_light_primary</item> &ndash;&gt;-->
+<!--    </style>-->
+
+<!--    <style name="Cool.Theme.FYPProject" parent="Theme.FYPProject" />-->
 </resources>

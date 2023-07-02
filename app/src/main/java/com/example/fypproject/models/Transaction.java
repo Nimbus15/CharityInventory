@@ -1,24 +1,44 @@
 package com.example.fypproject.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Transaction {
+public class Transaction implements Serializable {
     private int ID;
-    private String name;
+    private String tID;
     private String desc;
     private Date dateOfTransaction;
-    private int quantity;
 
     public Transaction() {
 
     }
 
-    public Transaction(int ID, String name, String desc,
+    public Transaction(int ID, String tID, String desc,
                        Date dateOfTransaction, int quantity) {
         this.ID = ID;
-        this.name = name;
+        this.tID = tID;
         this.desc = desc;
         this.dateOfTransaction = dateOfTransaction;
+        this.quantity = quantity;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public void settID(String tID) {
+        this.tID = tID;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public void setDateOfTransaction(Date dateOfTransaction) {
+        this.dateOfTransaction = dateOfTransaction;
+    }
+
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
@@ -26,50 +46,21 @@ public class Transaction {
         return ID;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public String gettID() {
+        return tID;
     }
 
     public String getDesc() {
         return desc;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
     public Date getDateOfTransaction() {
         return dateOfTransaction;
-    }
-
-    public void setDateOfTransaction(Date dateOfTransaction) {
-        this.dateOfTransaction = dateOfTransaction;
     }
 
     public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "ID=" + ID +
-                ", name='" + name + '\'' +
-                ", desc='" + desc + '\'' +
-                ", dateOfTransaction=" + dateOfTransaction +
-                ", quantity=" + quantity +
-                '}';
-    }
+    private int quantity;
 }

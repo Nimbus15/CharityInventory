@@ -85,5 +85,6 @@ dependencies {
     implementation 'io.github.pilgr:paperdb:2.7.2'
     implementation 'com.github.rey5137:material:1.2.5'
 
-    implementation 'com.google.firebase:firebase-storage:20.2.1'
+
+//    implementation 'com.google.firebase:firebase-storage:20.2.1'
 }

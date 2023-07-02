@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -73,6 +74,7 @@ public class BarcodeActivity extends AppCompatActivity {
                             String value = barcode.getRawValue();
                             if (value != null) {
                                 Intent intent = new Intent();
+                                Log.d("TAGbarcode", value);
                                 intent.putExtra(EXTRA_SCANNED_RESULT, value);
                                 setResult(RESULT_OK, intent);
                                 finish();

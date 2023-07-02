@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="spinner_entries_test">
+        <item>desc</item>
+    </array>
+</resources>
