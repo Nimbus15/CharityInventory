@@ -4,26 +4,27 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Transaction implements Serializable {
-    private int ID;
+    private int itemId;
     private String tID;
     private String desc;
-    private Date dateOfTransaction;
+    private String date;
+    private int quantity;
 
     public Transaction() {
 
     }
 
     public Transaction(int ID, String tID, String desc,
-                       Date dateOfTransaction, int quantity) {
-        this.ID = ID;
+                       String dateOfTransaction, int quantity) {
+        this.itemId = ID;
         this.tID = tID;
         this.desc = desc;
-        this.dateOfTransaction = dateOfTransaction;
+        this.date = dateOfTransaction;
         this.quantity = quantity;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setItemId(int itemId) {
+        this.itemId = itemId;
     }
 
     public void settID(String tID) {
@@ -34,16 +35,16 @@ public class Transaction implements Serializable {
         this.desc = desc;
     }
 
-    public void setDateOfTransaction(Date dateOfTransaction) {
-        this.dateOfTransaction = dateOfTransaction;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
-    public int getID() {
-        return ID;
+    public int getItemId() {
+        return itemId;
     }
 
     public String gettID() {
@@ -54,13 +55,22 @@ public class Transaction implements Serializable {
         return desc;
     }
 
-    public Date getDateOfTransaction() {
-        return dateOfTransaction;
+    public String getDate() {
+        return date;
     }
 
     public int getQuantity() {
         return quantity;
     }
 
-    private int quantity;
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "itemId=" + itemId +
+                ", tID='" + tID + '\'' +
+                ", desc='" + desc + '\'' +
+                ", date='" + date + '\'' +
+                ", quantity=" + quantity +
+                '}';
+    }
 }

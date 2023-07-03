@@ -48,4 +48,12 @@ public class ManagerAccount extends Account{
         this.password = password;
     }
 
+    @Override
+    public String toString() {
+        return "ManagerAccount{" +
+                "name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

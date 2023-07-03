@@ -1,5 +1,7 @@
 package com.example.fypproject;
 
+import static com.example.fypproject.globals.Globals.TRANSACTION_WORD;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +22,11 @@ import android.widget.TextView;
 import com.example.fypproject.models.Transaction;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +44,8 @@ public class TransactionActivity extends AppCompatActivity {
     private TransactionListAdapter transactionListAdapter;
 
     private List<Transaction> transactionList;
-    static Date currentDate = new Date();
+
+    static String currentDate = "27/04/23";
     public class TransactionData {
 
         public static List<Transaction> getAllTransactions() {
@@ -70,7 +78,7 @@ public class TransactionActivity extends AppCompatActivity {
         // ------------
         //transactionList = new ArrayList<>();
         transactionList = TransactionData.getAllTransactions(); //Firebase output data for all items
-
+        retrivedFromDatabase();
         //Initialize List--------------(FIREBASE OUTPUT LIST)--------------------
 
         //Initialize List Adapter
@@ -85,6 +93,28 @@ public class TransactionActivity extends AppCompatActivity {
 
         //Filter Data and Search based on action or name
         setupFilterAndSearch();
+    }
+
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference transactionRef = database.getReference().child(TRANSACTION_WORD);
+    private void retrivedFromDatabase(){
+        transactionRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                transactionList.clear();
+                for(DataSnapshot newDataSnapshot : snapshot.getChildren()){
+                    Transaction transaction = newDataSnapshot.getValue(Transaction.class);
+                    transactionList.add(transaction);
+                }
+                transactionListAdapter.setList(transactionList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     private void setupFilterAndSearch() {
@@ -203,10 +233,10 @@ public class TransactionActivity extends AppCompatActivity {
 
             public void bind(Transaction transaction) {
                 tidTv.setText("TID: " + transaction.gettID());
-                itemIdTv.setText("TName: " + transaction.getID());
-                descTv.setText("Desc: " +transaction.getDesc());
-                dateTv.setText("DATE: " + transaction.getDateOfTransaction());
-                quantityTv.setText("Quantity" + transaction.getQuantity());
+                itemIdTv.setText("Related Item: " + transaction.getItemId());
+                descTv.setText("Description of Action: " +transaction.getDesc());
+                dateTv.setText("Date of Transaction: " + transaction.getDate());
+                quantityTv.setText("Quantity: " + transaction.getQuantity());
             }
         }
     }

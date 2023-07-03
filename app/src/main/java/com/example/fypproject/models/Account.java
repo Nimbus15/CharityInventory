@@ -50,7 +50,16 @@ public class Account {
         this.password = password;
     }
 
-//    public String getImage() {
+    @Override
+    public String toString() {
+        return "Account{" +
+                "name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
+
+    //    public String getImage() {
 //        return image;
 //    }
 //

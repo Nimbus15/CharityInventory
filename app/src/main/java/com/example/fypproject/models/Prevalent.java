@@ -5,4 +5,5 @@ public class Prevalent {
 
     public static final String ACCOUNT_PHONE_KEY ="AccountPhone";
     public static final String ACCOUNT_PASSWORD_KEY ="AccountPassword";
+
 }

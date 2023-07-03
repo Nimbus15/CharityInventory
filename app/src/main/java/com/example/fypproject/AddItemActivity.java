@@ -6,6 +6,7 @@ import static com.example.fypproject.InventoryActivity.ITEM_WORD;
 import static com.example.fypproject.InventoryActivity.numOfItemInInventory;
 import static com.example.fypproject.globals.Globals.INVENTORY_WORD;
 import static com.example.fypproject.globals.Globals.MANAGER_WORD;
+import static com.example.fypproject.globals.Globals.TRANSACTION_WORD;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -40,6 +41,7 @@ import com.bumptech.glide.Glide;
 import com.example.fypproject.managers.PermissionsManager;
 import com.example.fypproject.models.Account;
 import com.example.fypproject.models.Item;
+import com.example.fypproject.models.Transaction;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -219,6 +221,7 @@ public class AddItemActivity extends AppCompatActivity {
         } else{
             setVariablesWithTestData();
         }
+        createCorrespondingTransaction();
 
     }
 
@@ -327,6 +330,38 @@ public class AddItemActivity extends AppCompatActivity {
 //    }
 
     private String choosenPhotoPath;
+    private void createCorrespondingTransaction(){
+        Transaction t1 = new Transaction();
+        String tid = "Add" + String.valueOf(ID);
+
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String currentDateToString = dateFormat.format(currentDate);
+
+
+        t1.setItemId(ID);
+        t1.settID(tid);
+        t1.setDesc("IN");
+        t1.setDate(currentDateToString);
+        t1.setQuantity(1);
+        progressBar.setVisibility(View.VISIBLE);
+
+        Log.d("TAGt1.toString()", t1.toString());
+        db.child(TRANSACTION_WORD).child(tid).setValue(t1).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    progressBar.setVisibility(View.GONE);
+
+                    Log.d("TAGTransactionAdd", "Transaction WORKING ");
+
+                } else {
+                    progressBar.setVisibility(View.GONE);
+                    Log.d("TAG", task.getException().getMessage());
+                }
+            }
+        });
+    }
     private void writeToDatabase() {
         getTextFromFields();
         ID = numOfItemInInventory++;
