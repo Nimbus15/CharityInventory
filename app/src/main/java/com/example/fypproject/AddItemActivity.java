@@ -221,8 +221,6 @@ public class AddItemActivity extends AppCompatActivity {
         } else{
             setVariablesWithTestData();
         }
-        createCorrespondingTransaction();
-
     }
 
     int ID;
@@ -331,6 +329,7 @@ public class AddItemActivity extends AppCompatActivity {
 
     private String choosenPhotoPath;
     private void createCorrespondingTransaction(){
+        progressBar.setVisibility(View.VISIBLE);
         Transaction t1 = new Transaction();
         String tid = "Add" + String.valueOf(ID);
 
@@ -374,6 +373,7 @@ public class AddItemActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
+                    createCorrespondingTransaction();
                     progressBar.setVisibility(View.GONE);
                     Void snapshot = task.getResult();
                     Toast.makeText(AddItemActivity.this, "Adding Item Successful", Toast.LENGTH_SHORT).show();

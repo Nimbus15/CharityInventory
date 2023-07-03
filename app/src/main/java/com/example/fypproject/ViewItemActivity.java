@@ -1,6 +1,7 @@
 package com.example.fypproject;
 
 import static com.example.fypproject.globals.Globals.INVENTORY_WORD;
+import static com.example.fypproject.globals.Globals.TRANSACTION_WORD;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -10,16 +11,21 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fypproject.models.Item;
+import com.example.fypproject.models.Transaction;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -28,6 +34,8 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,6 +95,7 @@ public class ViewItemActivity extends AppCompatActivity {
     }
 
     Item item;
+    private ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +118,7 @@ public class ViewItemActivity extends AppCompatActivity {
 
 
         buttonComplete = findViewById(R.id.buttonComplete);
+        progressBar = findViewById(R.id.progressBar2);
 
         item = (Item) getIntent().getSerializableExtra(EXTRA_ITEM);
         Toast.makeText(this, item.toString(), Toast.LENGTH_SHORT).show();
@@ -168,6 +178,40 @@ public class ViewItemActivity extends AppCompatActivity {
         quantity = Integer.parseInt(String.valueOf(editTextQuantity.getText()));
     }
 
+    private void addAnChangedTransactionInDatabase() {
+        Transaction t1 = new Transaction();
+        String tid = "Updated" + String.valueOf(ID);
+
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String currentDateToString = dateFormat.format(currentDate);
+
+
+        t1.setItemId(ID);
+        t1.settID(tid);
+        t1.setDesc("IN");
+        t1.setDate(currentDateToString);
+        t1.setQuantity(1);
+        progressBar.setVisibility(View.VISIBLE);
+
+        Log.d("TAGt1.toString()", t1.toString());
+        db.child(TRANSACTION_WORD).child(tid).setValue(t1).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    progressBar.setVisibility(View.GONE);
+
+                    Log.d("TAGTransactionUpdate", "Transaction WORKING ");
+
+                } else {
+                    progressBar.setVisibility(View.GONE);
+                    Log.d("TAG", task.getException().getMessage());
+                }
+            }
+        });
+
+    }
+
     private void updateDetailsInDatabase() {
         getTextFromField();
         // Obtain a reference to the location of the record you want to update
@@ -190,12 +234,12 @@ public class ViewItemActivity extends AppCompatActivity {
         changes.put("price", price);
         changes.put("quantity", quantity);
 
-
         // Update the record
         databaseRef.updateChildren(changes)
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
+                    addAnChangedTransactionInDatabase();
                     // Data updated successfully
                     Toast.makeText(getApplicationContext(), "Data updated successfully", Toast.LENGTH_SHORT).show();
                 }
