@@ -2,6 +2,7 @@ package com.example.fypproject;
 
 import static com.example.fypproject.globals.Globals.INVENTORY_WORD;
 import static com.example.fypproject.globals.Globals.TRANSACTION_WORD;
+import static com.example.fypproject.globals.Globals.VOLUNTEER_WORD;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -133,7 +134,7 @@ public class ViewItemActivity extends AppCompatActivity {
             }
         });
 
-        editTextApproval.setEnabled(!MainActivity.accountTypeInMain.equals("VOLUNTEER"));
+        editTextApproval.setEnabled(!MainActivity.accountTypeInMain.equals(VOLUNTEER_WORD));//"VOLUNTEER"
     }
 
     private void populateFromItem(Item _item) {
@@ -256,12 +257,12 @@ public class ViewItemActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        editTextApproval.setEnabled(!MainActivity.accountTypeInMain.equals("VOLUNTEER"));
+        editTextApproval.setEnabled(!MainActivity.accountTypeInMain.equals(VOLUNTEER_WORD));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        editTextApproval.setEnabled(!MainActivity.accountTypeInMain.equals("VOLUNTEER"));
+        editTextApproval.setEnabled(!MainActivity.accountTypeInMain.equals(VOLUNTEER_WORD));
     }
 }

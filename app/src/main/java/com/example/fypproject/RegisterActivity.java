@@ -3,6 +3,7 @@ package com.example.fypproject;
 import static com.example.fypproject.globals.Globals.ACCOUNT_TYPE_WORD;
 import static com.example.fypproject.globals.Globals.MANAGER_WORD;
 import static com.example.fypproject.globals.Globals.VOLUNTEER_WORD;
+import static com.example.fypproject.security.Security.VERIFICATION_KEY_WORD;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -103,11 +104,11 @@ public class RegisterActivity extends FragmentActivity {
             }
         });
     }
-
+    private static final int ZERO_WORD = 0;
     String name, phone, password, verificationKey;
 
     private boolean validateAccountSuccessful() {
-        int numOfErrors=0;
+        int numOfErrors=ZERO_WORD;
         if(typeOfAccount.equals(VOLUNTEER_WORD)){
             name = editTextName.getText().toString();
             phone = editTextPhone.getText().toString();
@@ -124,7 +125,7 @@ public class RegisterActivity extends FragmentActivity {
                 numOfErrors++;
             }
 
-            if(numOfErrors==0) {
+            if(numOfErrors==ZERO_WORD) {
                 progressDialog.setTitle("Creating Account");
                 progressDialog.setMessage("Please wait, while we are checking the credentials.");
                 progressDialog.setCanceledOnTouchOutside(false);
@@ -151,13 +152,15 @@ public class RegisterActivity extends FragmentActivity {
             } else if (TextUtils.isEmpty(password)){
                 Toast.makeText(this, "Please write your verification key...", Toast.LENGTH_SHORT).show();
                 numOfErrors++;
-            } else if (Integer.parseInt(verificationKey) != 5678){
-                Toast.makeText(this, "Verification key declined", Toast.LENGTH_SHORT).show();
-                numOfErrors++;
+            } else {
+                if (Integer.parseInt(verificationKey) != VERIFICATION_KEY_WORD){
+                    Toast.makeText(this, "Verification key declined", Toast.LENGTH_SHORT).show();
+                    numOfErrors++;
+                }
             }
             Log.d("verificationKey", verificationKey);
 
-            if(numOfErrors==0) {
+            if(numOfErrors==ZERO_WORD) {
                 progressDialog.setTitle("Creating Manager Account");
                 progressDialog.setMessage("Please wait, while we are checking the credentials.");
                 progressDialog.setCanceledOnTouchOutside(false);
@@ -218,7 +221,7 @@ public class RegisterActivity extends FragmentActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(RegisterActivity.this, "Congratulations, your account has been created.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, "Congratulations, your account has been created", Toast.LENGTH_SHORT).show();
                                 progressDialog.dismiss();
 
                                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
@@ -227,7 +230,7 @@ public class RegisterActivity extends FragmentActivity {
                                 //finish();
                             } else {
                                 progressDialog.dismiss();
-                                Toast.makeText(RegisterActivity.this, "Network Error: Please try again after some time...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, "Network Error: Please try again after some time", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

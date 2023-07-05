@@ -117,4 +117,19 @@
         android:visibility="invisible"
         />
 
+    <TextView
+        android:id="@+id/login_form_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="81dp"
+        android:layout_alignBottom="@+id/login_btn"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="113dp"
+        android:layout_marginTop="106dp"
+        android:layout_marginEnd="146dp"
+        android:layout_marginBottom="353dp"
+        android:text="Login Form"
+        android:textSize="30sp" />
+
 </RelativeLayout>
