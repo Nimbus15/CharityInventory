@@ -70,9 +70,10 @@ public class LoginActivity extends AppCompatActivity {
         forgetPasswordLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(LoginActivity.this, ResetPasswordActivity.class);
-//                startActivity(intent);
-                Toast.makeText(LoginActivity.this, "Need to add this", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(LoginActivity.this, "Need to add this", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
+                startActivity(intent);
+
             }
         });
 
