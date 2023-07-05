@@ -22,6 +22,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.navigation.NavController;
@@ -61,17 +65,19 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
     private ActivityMainBinding binding;
 
     private Button inventoryBtn, transactionsBtn, reportsBtn,
-            helpBtn, settingsBtn, expensesBtn;
+            helpBtn, settingsBtn, quickBtn;
     private Button backupBtn;
 
     private String typeOfAccount;
     public static String accountTypeInMain;
     private TextView nameTextView;
     private ImageView userImageView;
+    private ActivityResultLauncher<Intent> barcodeActivityLauncher;
     //private int numItemsInInventory=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         Intent intent = getIntent();
         typeOfAccount = intent.getStringExtra(ACCOUNT_TYPE_WORD);
@@ -84,8 +90,8 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
         binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(settingsIntent);
             }
         });
         DrawerLayout drawer = binding.drawerLayout;
@@ -109,13 +115,14 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
         reportsBtn = findViewById(R.id.reports_button);
         helpBtn = findViewById(R.id.help_button);
         settingsBtn = findViewById(R.id.settings_button);
+        quickBtn = findViewById(R.id.quick_button);
 
 
         View headerView = navigationView.getHeaderView(0);
         nameTextView= headerView.findViewById(R.id.usernameTextView);
         userImageView = headerView.findViewById(R.id.userImageView);
 
-
+        foundItem=null;
 //        AddItemActivity.checkAllPermissions();
 
         //backupBtn = findViewById(R.id.backupBtn);
@@ -152,6 +159,32 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
             }
         });
 
+        quickBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent barcodeIntent = new Intent(MainActivity.this, BarcodeActivity.class);
+                barcodeActivityLauncher.launch(barcodeIntent);
+            }
+        });
+
+        barcodeActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+
+                    String barcodeResponse = result.getData().getStringExtra(BarcodeActivity.EXTRA_SCANNED_RESULT);
+                    Log.d("TagBarcodeReponse", barcodeResponse);
+                    searchItemUsingBarcode(barcodeResponse);
+                    if(foundItem!= null){
+                        Log.d("ifstatementcalledtag", "onActivityResult - ifstatementcalled");
+                        Intent viewIntent = new Intent(MainActivity.this, ViewItemActivity.class);
+                        viewIntent.putExtra(ViewItemActivity.EXTRA_ITEM, foundItem);
+                        startActivity(viewIntent);
+                    }
+                }
+            }
+        });
+
 
 //        backupBtn.setOnClickListener(new View.OnClickListener() {
 //           @Override
@@ -175,6 +208,48 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
                     .placeholder(R.drawable.ic_user_image)
                     .into(userImageView);
         }
+    }
+
+    Item foundItem;
+    private void searchItemUsingBarcode(String barcode){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child(INVENTORY_WORD);
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot newDataSnapshot : snapshot.getChildren()) {
+                    Item item = newDataSnapshot.getValue(Item.class);//here
+                    Log.d("StartHeregetBarcode()Tag", item.getBarcode());
+                    if(item.getBarcode().equals(barcode)){
+                        foundItem = new Item();
+                        foundItem.setID(item.getID());
+                        foundItem.setName(item.getName());
+                        foundItem.setDesc(item.getDesc());
+                        foundItem.setCategory(item.getCategory());
+                        foundItem.setQuantity(item.getQuantity());
+                        foundItem.setMinQuantity(item.getMinQuantity());
+
+                        foundItem.setBrand(item.getBrand());
+                        foundItem.setBarcode(item.getBarcode());
+                        foundItem.setImage(item.getImage());
+                        foundItem.setNotes(item.getNotes());
+                        foundItem.setPrice(item.getPrice());
+                        foundItem.setApproved(item.getApproved());
+
+
+                        Log.d("FoundItemTag", foundItem.toString());
+                        return;
+                    }
+                }
+                Toast.makeText(MainActivity.this, "Item with barcode not found", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(MainActivity.this, "Barcode search cancelled", Toast.LENGTH_SHORT).show();
+            }
+
+        });
     }
 
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(INVENTORY_WORD);
@@ -237,9 +312,9 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
         int id = item.getItemId();
 
         if(id == R.id.action_settings){
-//            Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-//            startActivity(intent);
-            Toast.makeText(this, "THIS in mainactivity setting INCOMPLETE", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+            //Toast.makeText(this, "THIS in mainactivity setting INCOMPLETE", Toast.LENGTH_SHORT).show();
         }
 
         return super.onOptionsItemSelected(item);

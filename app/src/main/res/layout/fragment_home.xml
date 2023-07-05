@@ -43,10 +43,10 @@
         app:layout_constraintVertical_bias="0.355" />
 
     <Button
-        android:id="@+id/expenses_button"
+        android:id="@+id/quick_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Expenses"
+        android:text="Quick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.71"

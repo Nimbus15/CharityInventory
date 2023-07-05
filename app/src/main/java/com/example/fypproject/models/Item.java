@@ -100,6 +100,8 @@ public class Item implements Serializable {
     }
 
     public String getImage() {
+        if(image == null)
+            return  "";
         return image;
     }
 

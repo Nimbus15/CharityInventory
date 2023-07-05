@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
-import java.util.Date;
 
 public class TransactionActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -78,7 +77,7 @@ public class TransactionActivity extends AppCompatActivity {
         // ------------
         //transactionList = new ArrayList<>();
         transactionList = TransactionData.getAllTransactions(); //Firebase output data for all items
-        retrivedFromDatabase();
+        retrievedFromDatabase();
         //Initialize List--------------(FIREBASE OUTPUT LIST)--------------------
 
         //Initialize List Adapter
@@ -97,7 +96,7 @@ public class TransactionActivity extends AppCompatActivity {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference transactionRef = database.getReference().child(TRANSACTION_WORD);
-    private void retrivedFromDatabase(){
+    private void retrievedFromDatabase(){
         transactionRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
