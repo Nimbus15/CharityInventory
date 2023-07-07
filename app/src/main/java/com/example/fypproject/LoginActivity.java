@@ -70,7 +70,6 @@ public class LoginActivity extends AppCompatActivity {
         forgetPasswordLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(LoginActivity.this, "Need to add this", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
                 startActivity(intent);
 
@@ -149,7 +148,6 @@ public class LoginActivity extends AppCompatActivity {
                                Prevalent.currentOnlineUser = accountData;
                                intent.putExtra(ACCOUNT_TYPE_WORD, parentDbName);
                                startActivity(intent);
-                               //finish();
                            } else if(parentDbName.equals(VOLUNTEER_WORD)){
                                Toast.makeText(LoginActivity.this, "Logged in successfully...", Toast.LENGTH_LONG).show();
                                loadingBar.dismiss();
@@ -158,7 +156,6 @@ public class LoginActivity extends AppCompatActivity {
                                Prevalent.currentOnlineUser = accountData;
                                intent.putExtra(ACCOUNT_TYPE_WORD, parentDbName);
                                startActivity(intent);
-                               //finish();
                            }
                         }else{
                             loadingBar.dismiss();

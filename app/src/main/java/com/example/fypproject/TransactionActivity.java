@@ -63,7 +63,6 @@ public class TransactionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction);
 
-        //Initialize Views
         recyclerView = findViewById(R.id.recyclerView);
         til = findViewById(R.id.til);
         tilEt = findViewById(R.id.tilEt);
@@ -73,24 +72,16 @@ public class TransactionActivity extends AppCompatActivity {
         outRb = findViewById(R.id.outRb);
         searchBySpinner = findViewById(R.id.searchBySpinner);
 
-        //Initialize List--------------(FIREBASE OUTPUT LIST)--------
-        // ------------
-        //transactionList = new ArrayList<>();
-        transactionList = TransactionData.getAllTransactions(); //Firebase output data for all items
+        transactionList = TransactionData.getAllTransactions();
         retrievedFromDatabase();
-        //Initialize List--------------(FIREBASE OUTPUT LIST)--------------------
 
-        //Initialize List Adapter
         transactionListAdapter = new TransactionListAdapter();
 
-        //Set adapter to recycler view
         recyclerView.setAdapter(transactionListAdapter);
 
-        //Set data for adapter
         transactionListAdapter.setList(transactionList);
 
 
-        //Filter Data and Search based on action or name
         setupFilterAndSearch();
     }
 

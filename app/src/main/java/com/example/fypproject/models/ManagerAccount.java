@@ -3,19 +3,9 @@ package com.example.fypproject.models;
 public class ManagerAccount extends Account{
     private String name, phone;
     private String password;
-//    private String image;
-//    private Type accountType;
 
     public ManagerAccount() {
     }
-
-//    public Account(String name, String phone, String password, String image, Type accountType) {
-//        this.name = name;
-//        this.phone = phone;
-//        this.password = password;
-//        this.image = image;
-//        this.accountType = accountType;
-//    }
 
     public ManagerAccount(String name, String phone, String password) {
         this.name = name;

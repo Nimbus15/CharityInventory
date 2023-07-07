@@ -36,7 +36,6 @@ public class RegisterActivity extends FragmentActivity {
     private EditText managerEditTextName, managerEditTextPhone, managerEditTextPassword, managerEditTextVerification;
     private ProgressDialog progressDialog;
 
-    //private Type accountType;//?
     private String typeOfAccount;
 
     @Override
@@ -59,14 +58,11 @@ public class RegisterActivity extends FragmentActivity {
 
 
         progressDialog = new ProgressDialog(this);
-        //Log.d("Type.VOLUNTEER", String.valueOf(Type.VOLUNTEER));
         Log.d("working", "working");
 
-        //TODO: CONTINUE HERE
-        System.out.println("COMPARISON");
 
         Intent intent = getIntent();
-        typeOfAccount = intent.getStringExtra(ACCOUNT_TYPE_WORD); // Replace "key" with the same key used in the sending activity
+        typeOfAccount = intent.getStringExtra(ACCOUNT_TYPE_WORD);
         Log.d("LogTag", "the account type is:" +  typeOfAccount);
 
         if(Objects.equals(typeOfAccount, String.valueOf(Type.VOLUNTEER))){
@@ -132,7 +128,6 @@ public class RegisterActivity extends FragmentActivity {
                 progressDialog.show();
 
                 return true;
-                //HOW DOES IT MOVE TO NEXT FUNCTION?
             }
         } else if(typeOfAccount.equals(MANAGER_WORD)){
             name = managerEditTextName.getText().toString();
@@ -166,7 +161,7 @@ public class RegisterActivity extends FragmentActivity {
                 progressDialog.setCanceledOnTouchOutside(false);
                 progressDialog.show();
 
-                //HOW DOES IT MOVE TO NEXT FUNCTION?
+
                 return true;
             }
         }
@@ -174,7 +169,6 @@ public class RegisterActivity extends FragmentActivity {
     }
 
 
-    //Check phone and then use that phone number to create an account.
     private void createAccount(final String name, final String phone, final String password) {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference rootRef = database.getReference();
@@ -184,7 +178,6 @@ public class RegisterActivity extends FragmentActivity {
 
 
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            //This happens if the data in the field is modified
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 accessDatabase(dataSnapshot, phone, password, name, rootRef);
@@ -197,15 +190,11 @@ public class RegisterActivity extends FragmentActivity {
                 Intent mainIntent = new Intent(RegisterActivity.this, MainActivity.class);
                 mainIntent.putExtra(ACCOUNT_TYPE_WORD, typeOfAccount);
                 startActivity(mainIntent);
-                //finish();
             }
         });
     }
 
     private void accessDatabase(@NonNull DataSnapshot dataSnapshot, String phone, String password, String name, DatabaseReference rootRef) {
-        //TODO: IF IS MANAGER BUTTON SELECTED DO THIS:
-        //TODO: USE A FUNCTION TO REPEAT LOGIC
-        //If there is a phone number associated
         if (!(dataSnapshot.child(typeOfAccount).child(phone).exists())) {
             HashMap<String, Object> accountDatamap = new HashMap<>();
             accountDatamap.put("phone", phone);
@@ -213,9 +202,7 @@ public class RegisterActivity extends FragmentActivity {
             accountDatamap.put("name", name);
 
             Log.d("TAGaccountDatamap", "onDataChange: " + accountDatamap);
-            //TODO: add the phone again
 
-            //Add to list of volunteers's details
             rootRef.child(typeOfAccount).child(phone).updateChildren(accountDatamap)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -227,15 +214,13 @@ public class RegisterActivity extends FragmentActivity {
                                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                                 intent.putExtra(ACCOUNT_TYPE_WORD, typeOfAccount);
                                 startActivity(intent);
-                                //finish();
                             } else {
                                 progressDialog.dismiss();
                                 Toast.makeText(RegisterActivity.this, "Network Error: Please try again after some time", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
-
-            } else {//TODO: Make sure this does not affect the application
+            } else {
                 Toast.makeText(RegisterActivity.this, "This number: " + phone + " already exists.", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
                 Toast.makeText(RegisterActivity.this, "Please try again using another phone number.", Toast.LENGTH_SHORT).show();
@@ -243,7 +228,6 @@ public class RegisterActivity extends FragmentActivity {
                 Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
                 loginIntent.putExtra(ACCOUNT_TYPE_WORD, typeOfAccount);
                 startActivity(loginIntent);
-                //finish();
             }
     }
 }

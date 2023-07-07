@@ -101,7 +101,6 @@ public class InventoryActivity extends AppCompatActivity {
         executeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(AddItemActivity.this, "Adding Item Successful", Toast.LENGTH_SHORT).show();
                 String filterTerm = String.valueOf(filterBar.getText());
                 if(!filterTerm.equals("")){
                     filterItemsBasedOnName(filterTerm);
@@ -223,11 +222,6 @@ public class InventoryActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-//        FirebaseRecyclerOptions<Item> options =
-//                new FirebaseRecyclerOptions.Builder<Item>()
-//                        .setQuery(myRef, Item.class)
-//                        .build();
-
     }
 
     private void deleteItem(int itemID) {
@@ -289,7 +283,6 @@ public class InventoryActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             if(which == 0){
                                 deleteItem(itemID);
-                                //deleteTransactionAssociated(itemID);
                                 Log.d("TAGonClick0", "onClick: 0");
                             }
                             if(which == 1){

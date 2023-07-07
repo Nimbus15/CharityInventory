@@ -46,19 +46,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
-
-//TODO: LIST HERE
-//More Complexity?
-//Connect All Activity
-//Move expenses to Report
-//
-
-//TODO: Low-level
-
-//TODO: Other Subject
-//EA-mark, ES-lab + test soon, AI-lab, GE-LAB,
-
 public class MainActivity extends PermissionsManager implements NavigationView.OnNavigationItemSelectedListener{
 
     private AppBarConfiguration mAppBarConfiguration;
@@ -73,7 +60,7 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
     private TextView nameTextView;
     private ImageView userImageView;
     private ActivityResultLauncher<Intent> barcodeActivityLauncher;
-    //private int numItemsInInventory=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,15 +83,14 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
         });
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_inventory_displayer, R.id.nav_transaction_displayer, R.id.nav_report_displayer)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);//problem
+        NavigationUI.setupWithNavController(navigationView, navController);
 
 
 
@@ -123,9 +109,7 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
         userImageView = headerView.findViewById(R.id.userImageView);
 
         foundItem=null;
-//        AddItemActivity.checkAllPermissions();
 
-        //backupBtn = findViewById(R.id.backupBtn);
 
         inventoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -258,7 +242,6 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //numItemsInInventory = (int) dataSnapshot.getChildrenCount();
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     Item retrievedItem = userSnapshot.getValue(Item.class);
 
@@ -280,20 +263,17 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
     CollectionReference collectionReference = firestore.collection(INVENTORY_WORD);
     private void writeToFirestore() {
         for (Item item : charityInventory) {
-            DocumentReference documentReference = collectionReference.document(); // Auto-generated document ID
+            DocumentReference documentReference = collectionReference.document();
             documentReference.set(item)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            // Data has been successfully written to Firestore
                             Log.d("Firestore", "Data written successfully");
-                            //return false;
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            // Handle any errors that occur during data writing
                             Log.e("Firestore", "Error writing data", e);
                         }
                     });
@@ -302,7 +282,6 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -314,7 +293,6 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
         if(id == R.id.action_settings){
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
-            //Toast.makeText(this, "THIS in mainactivity setting INCOMPLETE", Toast.LENGTH_SHORT).show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -333,7 +311,6 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
         Log.d("TAGitem.getItemId()", String.valueOf(item.getItemId()));
 
         if(id == R.id.nav_inventory_displayer){
-//            Toast.makeText(this, "THIS in mainactivity inventory should have worked", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(MainActivity.this, InventoryActivity.class);
             startActivity(intent);
         }else if(id == R.id.nav_transaction_displayer){

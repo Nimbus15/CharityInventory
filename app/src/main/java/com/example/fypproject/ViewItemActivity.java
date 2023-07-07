@@ -42,8 +42,6 @@ import java.util.Map;
 
 public class ViewItemActivity extends AppCompatActivity {
     public static final String EXTRA_ITEM = "extra_item";
-    //TODO: ALLOW NEED EDIT
-    //TODO: ADD CATEGORY?
 
     private DatabaseReference db;
     private EditText editTextName, editTextDescription, editTextQuantity, editTextBrand,
@@ -60,9 +58,13 @@ public class ViewItemActivity extends AppCompatActivity {
     private TextView textViewResponse;
     private ActivityResultLauncher<Intent> barcodeActivityLauncher;
 
-    //threads
-    //===
-    //https://programmerworld.co/android/how-to-generate-bar-code-for-any-text-in-your-android-app-android-studio-source-code/#:~:text=%E2%80%93%20Android%20Studio%20Source%20code%20In%20this%20video,bar%20code%20format%20image%20for%20the%20entered%20Text.
+    /*
+  Programmerworld
+  "How to generate bar code for any text in your Android App?"
+  https://programmerworld.co/android/how-to-generate-bar-code-for-any-text-in-your-android-app-android-studio-source-code/#:~:text=%E2%80%93%20Android%20Studio%20Source%20code%20In%20this%20video,bar%20code%20format%20image%20for%20the%20entered%20Text.
+  Accessed: March 25,2023
+   */
+    //===START===
     public void generateANewBarcode() {
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
@@ -73,27 +75,12 @@ public class ViewItemActivity extends AppCompatActivity {
                     bitmap.setPixel(i, j, bitMatrix.get(i, j) ? Color.BLACK : Color.WHITE);
                 }
             }
-            imageProfile.setImageBitmap(bitmap);//heretest
+            imageProfile.setImageBitmap(bitmap);
         } catch (WriterException e) {
             e.printStackTrace();
         }
-    }
+    }//===Finish===
 
-    public void decodeABarcode() {
-        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-        try {
-            BitMatrix bitMatrix = multiFormatWriter.encode(editTextName.getText().toString(), BarcodeFormat.CODE_128, editTextName.getWidth(), editTextName.getHeight());
-            Bitmap bitmap = Bitmap.createBitmap(editTextName.getWidth(), editTextName.getHeight(), Bitmap.Config.RGB_565);
-            for (int i = 0; i < editTextName.getWidth(); i++) {
-                for (int j = 0; j < editTextName.getHeight(); j++) {
-                    bitmap.setPixel(i, j, bitMatrix.get(i, j) ? Color.BLACK : Color.WHITE);
-                }
-            }
-            imageProfile.setImageBitmap(bitmap);//heretest
-        } catch (WriterException e) {
-            e.printStackTrace();
-        }
-    }
 
     Item item;
     private ProgressBar progressBar;
@@ -215,11 +202,9 @@ public class ViewItemActivity extends AppCompatActivity {
 
     private void updateDetailsInDatabase() {
         getTextFromField();
-        // Obtain a reference to the location of the record you want to update
         DatabaseReference databaseRef =
                 FirebaseDatabase.getInstance().getReference(INVENTORY_WORD).child(String.valueOf(ID));
 
-        // Create a map to hold the updated data
         Map<String, Object> changes = new HashMap<>();
         changes.put("approved", approval);
         changes.put("barcode",  barcode);
@@ -245,7 +230,6 @@ public class ViewItemActivity extends AppCompatActivity {
             .addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    // An error occurred while updating data
                     Toast.makeText(getApplicationContext(), "Data update failed", Toast.LENGTH_SHORT).show();
                 }
             });

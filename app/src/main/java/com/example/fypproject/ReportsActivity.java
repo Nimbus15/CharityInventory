@@ -23,7 +23,7 @@ public class ReportsActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {//TODO: HERE
+    protected void onDestroy() {
         super.onDestroy();
         finish();
     }

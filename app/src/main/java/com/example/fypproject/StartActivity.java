@@ -33,7 +33,6 @@ public class StartActivity extends AppCompatActivity {
                 Intent loginIntent = new Intent(StartActivity.this, LoginActivity.class);
                 loginIntent.putExtra(ACCOUNT_TYPE_WORD, VOLUNTEER_WORD);
                 startActivity(loginIntent);
-                //finish();
             }
         });
 

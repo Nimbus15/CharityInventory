@@ -5,19 +5,9 @@ import com.example.fypproject.enums.Type;
 public class Account {
     private String name, phone;
     private String password;
-//    private String image;
-//    private Type accountType;
 
     public Account() {
     }
-
-//    public Account(String name, String phone, String password, String image, Type accountType) {
-//        this.name = name;
-//        this.phone = phone;
-//        this.password = password;
-//        this.image = image;
-//        this.accountType = accountType;
-//    }
 
     public Account(String name, String phone, String password) {
         this.name = name;
@@ -58,20 +48,4 @@ public class Account {
                 ", password='" + password + '\'' +
                 '}';
     }
-
-    //    public String getImage() {
-//        return image;
-//    }
-//
-//    public void setImage(String image) {
-//        this.image = image;
-//    }
-//
-//    public Type getAccountType() {
-//        return accountType;
-//    }
-//
-//    public void setAccountType(Type accountType) {
-//        this.accountType = accountType;
-//    }
 }

@@ -136,10 +136,10 @@ public class AddItemActivity extends AppCompatActivity {
         buttonBarcode = findViewById(R.id.buttonBarcode);
 
         editTextApproval.setEnabled(!MainActivity.accountTypeInMain.equals("VOLUNTEER"));
-        //setVariablesWithNulls();
+
         ID = numOfItemInInventory;
 
-        //Add Camera Activity?
+
         buttonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -456,10 +456,15 @@ public class AddItemActivity extends AppCompatActivity {
     private void sendSMS( String phoneNumber,  String message) {
 
         String phoneNumberConcatenated = "+" + phoneNumber;
-
         try {
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(phoneNumberConcatenated, null, message, null, null);
+            smsManager.
+                    sendTextMessage(
+                            phoneNumberConcatenated,
+                            null,
+                            message,
+                            null,
+                            null);
             Toast.makeText(this, "SMS sent successfully.", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Toast.makeText(this, "SMS sending failed.", Toast.LENGTH_SHORT).show();
