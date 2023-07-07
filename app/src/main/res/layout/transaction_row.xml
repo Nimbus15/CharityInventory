@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="25"
                 android:gravity="start"
-                tools:text="ID: 1" />
+                tools:text="[ID]" />
 
             <TextView
                 android:id="@+id/itemIdTv"
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="25"
                 android:gravity="start"
-                tools:text="Item ID: 1" />
+                tools:text="[Item ID]" />
 
             <TextView
                 android:id="@+id/descTv"
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="50"
                 android:gravity="end"
-                tools:text="Alex" />
+                tools:text="[Desc]" />
         </LinearLayout>
 
         <LinearLayout
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="start"
-                tools:text="Action: IN" />
+                tools:text="[XX/XX/XX]" />
 
             <TextView
                 android:id="@+id/quantityTv"
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                tools:text="22/06/2023" />
+                tools:text="[Quantity]" />
         </LinearLayout>
     </LinearLayout>
 

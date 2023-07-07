@@ -82,9 +82,13 @@ public class AddItemActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> barcodeActivityLauncher;
     private ProgressBar progressBar;
 
-    //threads
-    //===
-    //https://programmerworld.co/android/how-to-generate-bar-code-for-any-text-in-your-android-app-android-studio-source-code/#:~:text=%E2%80%93%20Android%20Studio%20Source%20code%20In%20this%20video,bar%20code%20format%20image%20for%20the%20entered%20Text.
+    /*
+    Programmerworld
+    "How to generate bar code for any text in your Android App?"
+    https://programmerworld.co/android/how-to-generate-bar-code-for-any-text-in-your-android-app-android-studio-source-code/#:~:text=%E2%80%93%20Android%20Studio%20Source%20code%20In%20this%20video,bar%20code%20format%20image%20for%20the%20entered%20Text.
+    Accessed: March 25,2023
+     */
+    //===START===
     public void generateANewBarcode() {
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
@@ -95,11 +99,12 @@ public class AddItemActivity extends AppCompatActivity {
                     bitmap.setPixel(i, j, bitMatrix.get(i, j) ? Color.BLACK : Color.WHITE);
                 }
             }
-            imageProfile.setImageBitmap(bitmap);//heretest
+            imageProfile.setImageBitmap(bitmap);
         } catch (WriterException e) {
             e.printStackTrace();
         }
     }
+    //===FINISH===
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -230,25 +235,6 @@ public class AddItemActivity extends AppCompatActivity {
     int quantity, minQuantity;
     float price;
 
-//    private void setVariablesWithNulls() {
-//        //initialisation with default - declare here
-//        ID = 0;
-//        name = "null";
-//        description = "null";
-//        quantity = 0;
-//        minQuantity = 0;
-//        brand = "brand";
-//        category = "null";
-//        barcode = "00000";
-//        price = 0.0f;
-//        notes = "null";
-//        approval = "null";
-//        setVariablesWithTestData();
-//
-//        imageFile = new File("/storage/self/primary/Pictures/new_image.jpeg");
-//        setTextFromVariables();
-//    }
-
     File imageFile;
 
     private void setVariablesWithTestData() {
@@ -284,7 +270,6 @@ public class AddItemActivity extends AppCompatActivity {
         if (imageFile.exists()) {
             Log.d("Image", "Image Working");
             Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
-            //here//imageProfile.setImageBitmap(imageBitmap);
         }
     }
 
@@ -323,9 +308,6 @@ public class AddItemActivity extends AppCompatActivity {
         getTextFromFields();
     }
 
-//    private void manageImages(){
-//        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-//    }
 
     private String choosenPhotoPath;
     private void createCorrespondingTransaction(){
@@ -366,7 +348,6 @@ public class AddItemActivity extends AppCompatActivity {
         ID = numOfItemInInventory++;
         Item item2 = new Item(ID, name, description, category, quantity,
                 minQuantity, brand, barcode, choosenPhotoPath, notes, price, approval);
-        //progressBar.setVisibility(View.VISIBLE);
 
         
         db.child(INVENTORY_WORD).child(String.valueOf(ID)).setValue(item2).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -400,11 +381,9 @@ public class AddItemActivity extends AppCompatActivity {
         float _price = 0.0f;
         String _notes = "testnotes";
         String _approval = "no";
-        //File _imageFile = new File("/storage/self/primary/Pictures/new_image.jpeg");
         String _imageString = "/storage/self/primary/Pictures/new_image.jpeg";
 
-        //Item item2 = new Item(ID, name, description, category, quantity,
-        // minQuantity, brand, barcode, choosenPhotoPath, notes, price, approval);
+
 
         Item newItem = new Item(_ID, _name, _description, _category, _quantity,
                 _minQuantity, _brand, _barcode, _imageString, _notes, _price, _approval);
@@ -475,8 +454,6 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     private void sendSMS( String phoneNumber,  String message) {
-//        String phoneNumberTemp = "+353894238159";
-//        String messageTemp = "Hello, this is a test message.";
 
         String phoneNumberConcatenated = "+" + phoneNumber;
 

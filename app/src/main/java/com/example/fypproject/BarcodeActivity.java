@@ -51,7 +51,6 @@ public class BarcodeActivity extends AppCompatActivity {
         if(isCameraPermissionGranted()){
             setupCamera();
         }else{
-            //
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA},PERMISSION_CAMERA_CODE);
         }
 
@@ -61,6 +60,13 @@ public class BarcodeActivity extends AppCompatActivity {
         scanner = BarcodeScanning.getClient(options);
     }
 
+    /*
+          ML Kit.
+          "Scan barcodes with ML Kit on Android"
+          https://developers.google.com/ml-kit/vision/barcode-scanning/android,
+          Accessed: March 25,2023.
+       */
+    //===START===
     private void setupCamera() {
         ListenableFuture<ProcessCameraProvider> cameraProviderListenableFuture = ProcessCameraProvider.getInstance(this);
         LuminosityAnalyzer analyzer = new LuminosityAnalyzer() {
@@ -80,7 +86,6 @@ public class BarcodeActivity extends AppCompatActivity {
                                 finish();
                             }
                         }
-                        //return false;
                     }
                 });
             }
@@ -91,7 +96,6 @@ public class BarcodeActivity extends AppCompatActivity {
                 try {
                     ProcessCameraProvider cameraProvider = cameraProviderListenableFuture.get();
 
-                    //Perview
                     Preview preview = new Preview.Builder().build();
                     preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
@@ -118,7 +122,8 @@ public class BarcodeActivity extends AppCompatActivity {
                 }
 
             }
-        }, ContextCompat.getMainExecutor(this));//
+        }, ContextCompat.getMainExecutor(this));
+        //===FINISH===
     }
 
     private boolean isCameraPermissionGranted() {

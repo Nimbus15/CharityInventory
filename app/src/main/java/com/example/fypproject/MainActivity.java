@@ -333,16 +333,15 @@ public class MainActivity extends PermissionsManager implements NavigationView.O
         Log.d("TAGitem.getItemId()", String.valueOf(item.getItemId()));
 
         if(id == R.id.nav_inventory_displayer){
-            Toast.makeText(this, "THIS in mainactivity inventory should have worked", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "THIS in mainactivity inventory should have worked", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(MainActivity.this, InventoryActivity.class);
             startActivity(intent);
         }else if(id == R.id.nav_transaction_displayer){
             Intent intent = new Intent(MainActivity.this, TransactionActivity.class);
             startActivity(intent);
         }else if(id == R.id.nav_report_displayer){
-//            Intent intent = new Intent(MainActivity.this, ReportActivity.class);
-//            startActivity(intent);
-            Toast.makeText(this, "THIS in mainactivity report INCOMPLETE", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, ReportsActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

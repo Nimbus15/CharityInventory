@@ -179,7 +179,11 @@ public class InventoryActivity extends AppCompatActivity {
     private List<Item> filteredList = new ArrayList<>();
 
     private void filterItemsBasedOnName(String name){
-        List<Item> filteredList = dataListCopy.stream().filter(item -> item.getName().toUpperCase(Locale.ENGLISH).equals(name.toUpperCase(Locale.ENGLISH))).collect(Collectors.toList());
+        List<Item> filteredList = dataListCopy.stream().
+                filter(item -> item.getName().
+                toUpperCase(Locale.ENGLISH).
+                equals(name.toUpperCase(Locale.ENGLISH))).
+                collect(Collectors.toList());
         adapter.setItemList(filteredList);
         Log.d("filterItemsBasedOnName", "filterItemsBasedOnName called: ");
     }

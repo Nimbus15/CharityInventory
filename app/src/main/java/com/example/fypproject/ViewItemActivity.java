@@ -228,20 +228,17 @@ public class ViewItemActivity extends AppCompatActivity {
         changes.put("desc", description);
 
 
-
         changes.put("minQuantity", minQuantity);
         changes.put("name", name);
         changes.put("notes",notes);
         changes.put("price", price);
         changes.put("quantity", quantity);
 
-        // Update the record
         databaseRef.updateChildren(changes)
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     addAnChangedTransactionInDatabase();
-                    // Data updated successfully
                     Toast.makeText(getApplicationContext(), "Data updated successfully", Toast.LENGTH_SHORT).show();
                 }
             })
