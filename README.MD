@@ -11,3 +11,15 @@ This is a Charity Inventory application that is for my college's Final Year Proj
 3. Start tracking inventory.
 4. Use Reports and Transactions to help understand your inventory.
 
+## Frontend Screenshots
+### 1. Main Page
+![My Image](frontend-screenshots/FYPMainPageScreenshot.png)
+
+### 2. Add Page
+![My Image](frontend-screenshots/FYPAddPageScreenshot.png)
+
+### 3. Inventory Page 
+![My Image](frontend-screenshots/FYPInventoryPageScreenshot.png)
+
+### 4. TransactionPageScreenshot
+![My Image](frontend-screenshots/FYPTransactionPageScreenshot.png)
