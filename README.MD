@@ -20,6 +20,10 @@ This is a Charity Inventory application that is for my college's Final Year Proj
 
 ### 3. Inventory Page 
 ![My Image](frontend-screenshots/FYPInventoryPageScreenshot.png)
+#### a.
+![My Image](frontend-screenshots/FYPInventoryRowScreenshot.png)
 
-### 4. TransactionPageScreenshot
+### 4. Transaction Page
 ![My Image](frontend-screenshots/FYPTransactionPageScreenshot.png)
+#### a.
+![My Image](frontend-screenshots/FYPTransactionRowScreenshot.png)
